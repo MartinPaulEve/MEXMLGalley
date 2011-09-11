@@ -7,7 +7,7 @@
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
  * @class MEXMLGalleyPlugin
- * @ingroup plugins_generic_MExmlGalley
+ * @ingroup plugins_generic_MEXMLGalley
  *
  * @brief Martin Eve's modified XML Galley Plugin
  */
@@ -18,16 +18,13 @@
 import('lib.pkp.classes.plugins.GenericPlugin');
 
 // this plugin is symbiotic with xmlGalley; it can't function independently
-import('plugins/generic/xmlGalley/ArticleXMLGalleyDAO');
+//include_once('plugins/generic/xmlGalley/ArticleXMLGalleyDAO.inc.php');
 
 class MEXMLGalleyPlugin extends GenericPlugin {
 	function register($category, $path) {
 		if (parent::register($category, $path)) {
 			if ($this->getEnabled()) {
-				$this->import('../xmlGalley/ArticleXMLGalleyDAO');
-				$xmlGalleyDao = new ArticleXMLGalleyDAO($this->getName());
-				DAORegistry::registerDAO('ArticleXMLGalleyDAO', $xmlGalleyDao);
-
+				error_log("Registered");
 				HookRegistry::register('ArticleGalleyDAO::insertNewGalley', array($this, 'insertXMLGalleys') );
 			}
 
@@ -45,6 +42,8 @@ class MEXMLGalleyPlugin extends GenericPlugin {
 	}
 
 	function insertXMLGalleys($hookName, $args) {
+
+		error_log("Function called");
 /*
 		$galley =& $args[0];
 		$galleyId =& $args[1];
@@ -113,6 +112,7 @@ class MEXMLGalleyPlugin extends GenericPlugin {
 	 */
 	function getXMLGalley($hookName, $args) {
 		if (!$this->getEnabled()) return false;
+		return false;
 		$galleyId =& $args[0];
 		$articleId =& $args[1];
 		$returner =& $args[2];
@@ -187,31 +187,10 @@ class MEXMLGalleyPlugin extends GenericPlugin {
 	 * Set the enabled/disabled state of this plugin
 	 */
 	function setEnabled($enabled) {
+		error_log("Set to " . $enabled);
 		parent::setEnabled($enabled);
 		$journal =& Request::getJournal();
 		if ($journal) {
-			// set default XSLT renderer
-			if ($this->getSetting($journal->getId(), 'XSLTrenderer') == "") {
-
-				// Determine the appropriate XSLT processor for the system
-				if ( version_compare(PHP_VERSION,'5','>=') && extension_loaded('xsl') && extension_loaded('dom') ) {
-					// PHP5.x with XSL/DOM modules
-					$this->updateSetting($journal->getId(), 'XSLTrenderer', 'PHP5');
-
-				} elseif ( version_compare(PHP_VERSION,'5','<') && extension_loaded('xslt') ) {
-					// PHP4.x with XSLT module
-					$this->updateSetting($journal->getId(), 'XSLTrenderer', 'PHP4');
-
-				} else {
-					$this->updateSetting($journal->getId(), 'XSLTrenderer', 'external');
-				}
-			}
-
-			// set default XSL stylesheet to NLM
-			if ($this->getSetting($journal->getId(), 'XSLstylesheet') == "") {
-				$this->updateSetting($journal->getId(), 'XSLstylesheet', 'NLM');
-			}
-
 			return true;
 		}
 		return false;
@@ -225,123 +204,8 @@ class MEXMLGalleyPlugin extends GenericPlugin {
  	 * @return boolean
  	 */
 	function manage($verb, $args, &$message) {
-		if (!parent::manage($verb, $args, $message)) return false;
-
-		$journal =& Request::getJournal();
-
-		$templateMgr =& TemplateManager::getManager();
-		$templateMgr->register_function('plugin_url', array(&$this, 'smartyPluginUrl'));
-
-		$this->import('XMLGalleySettingsForm');
-		$form = new XMLGalleySettingsForm($this, $journal->getId());
-
-		switch ($verb) {
-			case 'test':
-				// test external XSLT renderer
-				$xsltRenderer = $this->getSetting($journal->getId(), 'XSLTrenderer');
-
-				if ($xsltRenderer == "external") {
-					// get command for external XSLT tool
-					$xsltCommand = $this->getSetting($journal->getId(), 'externalXSLT');
-
-					// get test XML/XSL files
-					$xmlFile = dirname($_SERVER['SCRIPT_FILENAME']) . DIRECTORY_SEPARATOR . $this->getPluginPath() . '/transform/test.xml';
-					$xslFile = $this->getPluginPath() . '/transform/test.xsl';
-
-					// create a testing article galley object (to access the XSLT render method)
-					$this->import('ArticleXMLGalley');
-					$xmlGalley = new ArticleXMLGalley($this->getName());
-
-					// transform the XML using whatever XSLT processor we have available
-					$result = $xmlGalley->transformXSLT($xmlFile, $xslFile, $xsltCommand);
-
-					// check the result
-					if (trim(preg_replace("/\s+/", " ", $result)) != "Open Journal Systems Success" ) {
-						$form->addError('content', Locale::translate('plugins.generic.xmlGalley.settings.externalXSLTFailure'));
-					} else $templateMgr->assign('testSuccess', true);
-
-				}
-
-			case 'settings':
-				Locale::requireComponents(array(LOCALE_COMPONENT_APPLICATION_COMMON,  LOCALE_COMPONENT_PKP_MANAGER));
-				// if we are updating XSLT settings or switching XSL sheets
-				if (Request::getUserVar('save')) {
-					$form->readInputData();
-					$form->initData();
-					if ($form->validate()) {
-						$form->execute();
-					}
-					$form->display();
-
-				// if we are uploading a custom XSL sheet
-				} elseif (Request::getUserVar('uploadCustomXSL')) {
-					$form->readInputData();
-
-					import('classes.file.JournalFileManager');
-
-					// if the a valid custom XSL is uploaded, process it
-					$fileManager = new JournalFileManager($journal);
-					if ($fileManager->uploadedFileExists('customXSL')) {
-
-						// check type and extension -- should be text/xml and xsl, respectively
-						$type = $fileManager->getUploadedFileType('customXSL');
-						$fileName = $fileManager->getUploadedFileName('customXSL');
-						$extension = strtolower($fileManager->getExtension($fileName));
-
-						if (($type == 'text/xml' || $type == 'text/xml' || $type == 'application/xml' || $type == 'application/xslt+xml')
-							&& $extension == 'xsl') {
-
-							// if there is an existing XSL file, delete it from the journal files folder
-							$existingFile = $this->getSetting($journal->getId(), 'customXSL');
-							if (!empty($existingFile) && $fileManager->fileExists($fileManager->filesDir . $existingFile)) {
-								$fileManager->deleteFile($existingFile);
-							}
-
-							// upload the file into the journal files folder
-							$fileManager->uploadFile('customXSL', $fileName);
-
-							// update the plugin and form settings
-							$this->updateSetting($journal->getId(), 'XSLstylesheet', 'custom');
-							$this->updateSetting($journal->getId(), 'customXSL', $fileName);
-
-						} else $form->addError('content', Locale::translate('plugins.generic.xmlGalley.settings.customXSLInvalid'));
-
-					} else $form->addError('content', Locale::translate('plugins.generic.xmlGalley.settings.customXSLRequired'));
-
-					// re-populate the form values with the new settings
-					$form->initData();
-					$form->display();
-
-				// if we are deleting an existing custom XSL sheet
-				} elseif (Request::getUserVar('deleteCustomXSL')) {
-
-					import('classes.file.JournalFileManager');
-
-					// if the a valid custom XSL is uploaded, process it
-					$fileManager = new JournalFileManager($journal);
-
-					// delete the file from the journal files folder
-					$fileName = $this->getSetting($journal->getId(), 'customXSL');
-					if (!empty($fileName)) $fileManager->deleteFile($fileName);
-
-					// update the plugin and form settings
-					$this->updateSetting($journal->getId(), 'XSLstylesheet', 'NLM');
-					$this->updateSetting($journal->getId(), 'customXSL', '');
-
-
-					$form->initData();
-					$form->display();
-
-				} else {
-					$form->initData();
-					$form->display();
-				}
-				return true;
-			default:
-				// Unknown management verb
-				assert(false);
-				return false;
-		}
+		error_log("Verb " . $verb);
+		if (!parent::manage($verb, $args, $message)) { return false; } else { return true; }
 	}
 }
 ?>
