@@ -24,8 +24,8 @@ class meXml extends GenericPlugin {
 	function register($category, $path) {
 		if (parent::register($category, $path)) {
 			if ($this->getEnabled()) {
-				error_log("Registered");
-				HookRegistry::register('ArticleGalleyDAO::insertNewGalley', array($this, 'insertXMLGalleys') );
+				HookRegistry::register('ArticleGalleyDAO::insertNewGalley', array(&$this, 'insertXMLGalleys') );
+				error_log("Hooks Registered");
 			}
 
 			return true;
