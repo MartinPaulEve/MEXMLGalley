@@ -24,7 +24,11 @@ class meXml extends GenericPlugin {
 	function register($category, $path) {
 		if (parent::register($category, $path)) {
 			if ($this->getEnabled()) {
-				HookRegistry::register('ArticleGalleyDAO::insertNewGalley', array(&$this, 'insertXMLGalleys') );
+				$this->import('ArticleXMLGalleyDAO');
+				$xmlGalleyDao = new ArticleXMLGalleyDAO($this->getName());
+				DAORegistry::registerDAO('ArticleXMLGalleyDAO', $xmlGalleyDao);
+
+				HookRegistry::register('ArticleGalleyDAO::insertNewGalley', array(&$xmlGalleyDao, 'insertXMLGalleys') );
 				HookRegistry::register('ArticleGalleyDAO::_returnGalleyFromRow', array(&$this, 'returnXMLGalley') );
 			}
 
@@ -45,76 +49,6 @@ class meXml extends GenericPlugin {
 		return "Allows PDF galleys to be generated from XML";
 	}
 
-
-
-	// TODO: move this to own class file for new xmlGalleyFile etc.
-
-	/**
-	 * Insert XML-derived galleys into article_xml_galleys
-	 */
-	function insertXMLGalleys($hookName, $args) {
-
-		$galley =& $args[0];
-		$galleyId =& $args[1];
-
-		// If the galley is an XML file, then insert rows in the article_xml_galleys table
-		if ($galley->getLabel() == "XML") {
-
-			// create an XHTML galley
-			$this->update(
-				'INSERT INTO article_xml_galleys
-					(galley_id, article_id, label, galley_type)
-					VALUES
-					(?, ?, ?, ?)',
-				array(
-					$galleyId,
-					$galley->getArticleId(),
-					'XHTML',
-					'application/xhtml+xml'
-				)
-			);
-
-			// if we have enabled XML-PDF galley generation (plugin setting)
-			// and are using the built-in NLM stylesheet, append a PDF galley as well
-			// this will insert a second corresponding entry into article_galleys first in order
-			// to circumvent bug #5152 by only ever having one galley per file
-
-
-			// instantiate a new galley file
-			$ArticleGalley = new ArticleGalley();
-
-			$ArticleGalley->setArticleId($galley->getArticleId());
-			$ArticleGalley->setLabel('PDF');
-
-			// insert the new galley
-			$ArticleGalleyDao = new ArticleGalleyDAO();
-			$ArticleGalleyDao->insertArticleFile($ArticleGalley);
-
-			// insert the PDF/XML galley
-			$journal =& Request::getJournal();
-			$xmlGalleyPlugin =& PluginRegistry::getPlugin('generic', $this->parentPluginName);
-
-			if ($xmlGalleyPlugin->getSetting($journal->getId(), 'nlmPDF') == 1 && 
-				$xmlGalleyPlugin->getSetting($journal->getId(), 'XSLstylesheet') == 'NLM' ) {
-
-				// create a PDF galley
-				$this->update(
-					'INSERT INTO article_xml_galleys
-						(galley_id, article_id, label, galley_type)
-						VALUES
-						(?, ?, ?, ?)',
-					array(
-						$ArticleGalley->getId(),
-						$galley->getArticleId(),
-						'PDF',
-						'application/pdf'
-					)
-				);
-
-			}
-			return true;
-		}
-		return false;	}
 
 
 	/**
