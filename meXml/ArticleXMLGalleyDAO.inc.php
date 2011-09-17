@@ -167,8 +167,6 @@ class ArticleXMLGalleyDAO extends ArticleGalleyDAO {
 		// If the galley is an XML file, then insert rows in the article_xml_galleys table
 		if ($galley->getLabel() == "XML") {
 
-			error_log('Inserting XML Galley');
-
 			// create an XHTML galley
 			$this->update(
 				'INSERT INTO article_xml_galleys
@@ -193,14 +191,9 @@ class ArticleXMLGalleyDAO extends ArticleGalleyDAO {
 			$journal =& Request::getJournal();
 			$xmlGalleyPlugin =& PluginRegistry::getPlugin('generic', $this->parentPluginName);
 
-
-			error_log('nlmPDF: ' . $xmlGalleyPlugin->getSetting($journal->getId(), 'nlmPDF'));
-			error_log('XSLstylesheet: ' . $xmlGalleyPlugin->getSetting($journal->getId(), 'XSLstylesheet'));
-
 			if ($xmlGalleyPlugin->getSetting($journal->getId(), 'nlmPDF') == 1 && 
 				$xmlGalleyPlugin->getSetting($journal->getId(), 'XSLstylesheet') == 'NLM' ) {
 
-				error_log('Inserting PDF Galley');
 				// copy the XML file to a new location, as the basis for the PDF
 				//$articleFileManager = new ArticleFileManager($galley->getArticleId());
 				//$fileId = $articleFileManager->copyPublicFile($galley->getFilePath(), $fileType);
