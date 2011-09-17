@@ -20,7 +20,7 @@
 
 
 import('classes.article.ArticleGalleyDAO');
-
+import('plugins.generic.meXml.ArticleXMLGalley');
 
 class ArticleXMLGalleyDAO extends ArticleGalleyDAO {
 	/** @var $parentPluginName string Name of parent plugin */
@@ -167,6 +167,8 @@ class ArticleXMLGalleyDAO extends ArticleGalleyDAO {
 		// If the galley is an XML file, then insert rows in the article_xml_galleys table
 		if ($galley->getLabel() == "XML") {
 
+			error_log('Inserting XML Galley');
+
 			// create an XHTML galley
 			$this->update(
 				'INSERT INTO article_xml_galleys
@@ -187,22 +189,40 @@ class ArticleXMLGalleyDAO extends ArticleGalleyDAO {
 			// to circumvent bug #5152 by only ever having one galley per file
 
 
-			// instantiate a new galley file
-			$ArticleGalley = new ArticleGalley();
-
-			$ArticleGalley->setArticleId($galley->getArticleId());
-			$ArticleGalley->setLabel('PDF');
-
-			// insert the new galley
-			$ArticleGalleyDao = new ArticleGalleyDAO();
-			$ArticleGalleyDao->insertArticleFile($ArticleGalley);
-
 			// insert the PDF/XML galley
 			$journal =& Request::getJournal();
 			$xmlGalleyPlugin =& PluginRegistry::getPlugin('generic', $this->parentPluginName);
 
+
+			error_log('nlmPDF: ' . $xmlGalleyPlugin->getSetting($journal->getId(), 'nlmPDF'));
+			error_log('XSLstylesheet: ' . $xmlGalleyPlugin->getSetting($journal->getId(), 'XSLstylesheet'));
+
 			if ($xmlGalleyPlugin->getSetting($journal->getId(), 'nlmPDF') == 1 && 
 				$xmlGalleyPlugin->getSetting($journal->getId(), 'XSLstylesheet') == 'NLM' ) {
+
+				error_log('Inserting PDF Galley');
+				// copy the XML file to a new location, as the basis for the PDF
+				//$articleFileManager = new ArticleFileManager($galley->getArticleId());
+				//$fileId = $articleFileManager->copyPublicFile($galley->getFilePath(), $fileType);
+
+				// instantiate a new galley file
+				$ArticleGalley = new ArticleXMLGalley('meXml');
+
+				$ArticleGalley->setArticleId($galley->getArticleId());
+				$ArticleGalley->setLabel('PDF');
+				$ArticleGalley->setLocale(Locale::getLocale());
+				$ArticleGalley->setFileId($galley->getFileId());
+
+				// before the insert, we have to clear the hooks, or we get an infinite loop
+				HookRegistry::clear('ArticleGalleyDAO::insertNewGalley');
+
+				// insert the galley
+				$galleyDao =& DAORegistry::getDAO('ArticleGalleyDAO');
+				$galleyDao->insertGalley($ArticleGalley);
+
+				// re-register the hook
+				HookRegistry::register('ArticleGalleyDAO::insertNewGalley', array(&$this, 'insertXMLGalleys') );
+
 
 				// create a PDF galley
 				$this->update(
