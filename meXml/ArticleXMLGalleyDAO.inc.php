@@ -133,21 +133,9 @@ class ArticleXMLGalleyDAO extends ArticleGalleyDAO {
 					$row = $result->GetRowAssoc(false);
 					$xmlGalley = $this->_getXMLGalleyFromId($row['galley_id'], $articleId);
 
-// WARNING: See bug #5152 and note below.
-/*
-					$xmlGalley->setId($row['xml_galley_id']);
-
-					// only append PDF galleys if the correct plugin settings are set
-					if ( ($xmlGalleyPlugin->getSetting($journal->getId(), 'nlmPDF') == 1 
-							&& $xmlGalley->isPdfGalley()) || $xmlGalley->isHTMLGalley()) {
-						array_push($galleys, $xmlGalley);
-					} */
 					$result->moveNext();
 				}
 
-				// hide source XML galley; this could be made a plugin setting/checkbox
-// WARNING: See bug #5152 and note below.
-//				if (isset($xmlGalley)) unset($galleys[$key]);
 			}
 			unset($galley);
 		}

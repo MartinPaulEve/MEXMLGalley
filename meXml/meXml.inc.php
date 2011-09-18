@@ -28,6 +28,8 @@ class meXml extends GenericPlugin {
 				$xmlGalleyDao = new ArticleXMLGalleyDAO($this->getName());
 				DAORegistry::registerDAO('ArticleXMLGalleyDAO', $xmlGalleyDao);
 
+				//TODO: reinstate hooks from xmlGalley plugin to generate PDF
+
 				HookRegistry::register('ArticleGalleyDAO::insertNewGalley', array(&$xmlGalleyDao, 'insertXMLGalleys') );
 				HookRegistry::register('ArticleGalleyDAO::_returnGalleyFromRow', array(&$this, 'returnXMLGalley') );
 			}
