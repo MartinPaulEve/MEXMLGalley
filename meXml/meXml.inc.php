@@ -139,7 +139,15 @@ class meXml extends GenericPlugin {
 		$articleXMLGalley->setViews($galley->getViews());
 		$articleXMLGalley->setFileName($galley->getFileName());
 		$articleXMLGalley->setOriginalFileName($galley->getOriginalFileName());
-		$articleXMLGalley->setFileType($galley->getFileType());
+
+		// override file type based on name
+		if($galley->getLabel() == 'PDF')
+		{
+			$articleXMLGalley->setFileType('application/pdf');
+		} else {
+			$articleXMLGalley->setFileType($galley->getFileType());
+		}
+
 		$articleXMLGalley->setFileSize($galley->getFileSize());
 		$articleXMLGalley->setDateModified($galley->getDateModified());
 		$articleXMLGalley->setDateUploaded($galley->getDateUploaded());

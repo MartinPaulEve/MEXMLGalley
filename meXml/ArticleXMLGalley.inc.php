@@ -258,6 +258,8 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 			// check for safe mode and escape the shell command
 			if( !ini_get('safe_mode') ) $fopCommand = escapeshellcmd($fopCommand);
 
+			error_log('Fopping: ' . $fopCommand);
+
 			// run the shell command and get the results
 			exec($fopCommand . ' 2>&1', $contents, $status);
 
