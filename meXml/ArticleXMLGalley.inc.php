@@ -112,6 +112,9 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 					break;
 			}
 
+			// TODO: this transform is not working
+			error_log('FOP transform: ' . $this->getFilePath());
+
 			// transform the XML using whatever XSLT processor we have available
 			$contents = $this->transformXSLT($this->getFilePath(), $xslSheet, $xsltRenderer);
 
