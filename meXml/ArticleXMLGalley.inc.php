@@ -291,8 +291,13 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 	 */
 	function transformXSLT($xmlFile, $xslFile, $xsltType = "", $arguments = null) {
 		error_log("transformXSLT");
+
+		error_log('Searching for XML:' . $xmlFile);
+		error_log('Searching for XSL:' . $xslFile);
 		// if either XML or XSL file don't exist, then fail without trying to process XSLT
 		if (!FileManager::fileExists($xmlFile) || !FileManager::fileExists($xslFile)) return false;
+
+		error_log("Found files");
 
 		// Determine the appropriate XSLT processor for the system
 		if ( version_compare(PHP_VERSION,'5','>=') && extension_loaded('xsl') && extension_loaded('dom') ) {
