@@ -193,6 +193,8 @@ class ArticleXMLGalleyDAO extends ArticleGalleyDAO {
 				$ArticleGalley->setLabel('PDF');
 				$ArticleGalley->setLocale(Locale::getLocale());
 				$ArticleGalley->setFileId($galley->getFileId());
+				$ArticleGalley->setFileType('application/pdf');
+				$ArticleGalley->setType('public');
 
 				// before the insert, we have to clear the hooks, or we get an infinite loop
 				HookRegistry::clear('ArticleGalleyDAO::insertNewGalley');

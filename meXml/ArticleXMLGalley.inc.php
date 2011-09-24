@@ -53,6 +53,7 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 	 * @return cache object
 	 */
 	function &_getXSLTCache($key) {
+		error_log("_getXSLTCache");
 		static $caches;
 		if (!isset($caches)) {
 			$caches = array();
@@ -81,6 +82,7 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 	 * @return boolean
 	 */
 	function _xsltCacheMiss(&$cache) {
+		error_log("_xsltCacheMiss");
 		static $contents;
 		if (!isset($contents)) {
 			$journal =& Request::getJournal();
@@ -126,6 +128,7 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 	 * @return string
 	 */
 	function getHTMLContents() {
+		error_log("getHTMLContents");
 		$xmlGalleyPlugin =& PluginRegistry::getPlugin('generic', $this->parentPluginName);
 
 		// if the XML Galley plugin is not installed or enabled,
@@ -193,6 +196,7 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 	 * @return string
 	 */
 	function viewFileContents() {
+		error_log("viewFileContents");
 		import('lib.pkp.classes.file.FileManager');
 		$pdfFileName = CacheManager::getFileCachePath() . DIRECTORY_SEPARATOR . 'fc-xsltGalley-' . str_replace(FileManager::parseFileExtension($this->getFileName()), 'pdf', $this->getFileName());
 
@@ -286,6 +290,7 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 	 * @return string
 	 */
 	function transformXSLT($xmlFile, $xslFile, $xsltType = "", $arguments = null) {
+		error_log("transformXSLT");
 		// if either XML or XSL file don't exist, then fail without trying to process XSLT
 		if (!FileManager::fileExists($xmlFile) || !FileManager::fileExists($xslFile)) return false;
 

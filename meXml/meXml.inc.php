@@ -66,6 +66,23 @@ class meXml extends GenericPlugin {
 	}
 
 	/**
+	 * Return XML-derived galley as a file; basically this is a FO-rendered PDF file
+	 */
+	function viewXMLGalleyFile($hookName, $args) {
+		if (!$this->getEnabled()) return false;
+		$article =& $args[0];
+		$galley =& $args[1];
+		$fileId =& $args[2];
+
+		$journal =& Request::getJournal();
+
+		if (get_class($galley) == 'ArticleXMLGalley' && $galley->isPdfGalley() &&
+			$this->getSetting($journal->getId(), 'nlmPDF') == 1) {
+			return $galley->viewFileContents();
+		} else return false;
+	}
+
+	/**
 	 * Return XML-derived galley by ID from article_xml_galleys
 	 * (which does not exist in article_galleys)
 	 */
