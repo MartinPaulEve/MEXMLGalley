@@ -114,6 +114,8 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 
 			// TODO: this transform is not working
 			error_log('FOP transform: ' . $this->getFilePath());
+			error_log('FOP sheet: ' . $xslSheet);
+			error_log('FOP renderer: ' . $xsltRenderer);
 
 			// transform the XML using whatever XSLT processor we have available
 			$contents = $this->transformXSLT($this->getFilePath(), $xslSheet, $xsltRenderer);
@@ -323,10 +325,13 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 				$xmlDom->resolveExternals = true;
 
 				$xmlDom->load($xmlFile);
+				error_log("DOM loaded " . $xmlFile);
 
 				// create the processor and import the stylesheet
 				$xslDom = new DOMDocument("1.0", "UTF-8");
 				$xslDom->load($xslFile);
+
+				error_log("XSL loaded " . $xslFile);
 
 				$proc = new XsltProcessor();
 				$proc->importStylesheet($xslDom);
