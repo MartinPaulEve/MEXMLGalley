@@ -55,10 +55,6 @@
 
   <xsl:template match="/">
     <xsl:for-each select="$processes/step/concat('../',.)">
-      <xsl:message>
-        <xsl:text>&#xA;... Applying </xsl:text>
-        <xsl:value-of select="."/>
-      </xsl:message>
       <saxon:assign name="document"
         select="saxon:transform(
                   saxon:compile-stylesheet(doc(.)),
@@ -68,7 +64,6 @@
            runtime parameters for any (or all) steps -->
     </xsl:for-each>
     <xsl:sequence select="$document"/>
-    <xsl:message>&#xA;... Done</xsl:message>
   </xsl:template>
   
 </xsl:stylesheet>
