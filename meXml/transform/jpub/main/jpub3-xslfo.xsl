@@ -4495,7 +4495,16 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 
 <xsl:template name="make-external-link">
-  <xsl:param name="href" select="@xlink:href"/>
+  <xsl:param name="href">
+   <xsl:choose>
+      <xsl:when test="normalize-space()">
+        <xsl:apply-templates/>
+      </xsl:when>
+      <xsl:otherwise>
+	 <xsl:value-of select="@contents"/>
+      </xsl:otherwise>
+   </xsl:choose>
+  </xsl:param>
   <xsl:param name="contents">
     <xsl:choose>
       <xsl:when test="normalize-space()">
@@ -4505,11 +4514,11 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
         <xsl:value-of select="@xlink:href"/>
       </xsl:otherwise>
     </xsl:choose>
-  </xsl:param>
-  <fo:basic-link external-destination="{normalize-space($href)}"
-    show-destination="new" xsl:use-attribute-sets="link">
-    <xsl:copy-of select="$contents"/>
-  </fo:basic-link>
+  </xsl:param> 
+	  <fo:basic-link external-destination="{normalize-space($href)}"
+	    show-destination="new" xsl:use-attribute-sets="link">
+	    <xsl:copy-of select="$contents"/>
+	  </fo:basic-link>
 </xsl:template>
 
 
