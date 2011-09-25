@@ -3427,11 +3427,11 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
             <fo:block-container>
               <!-- extra circumlocutions are necessary to redefine
                    the reference area for indenting -->
-            <fo:wrapper start-indent="0pc">
+
             <fo:block xsl:use-attribute-sets="ref">
               <xsl:apply-templates/>
             </fo:block>
-            </fo:wrapper>
+
             </fo:block-container>
           </fo:list-item-body>
         </fo:list-item>

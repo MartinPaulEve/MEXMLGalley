@@ -99,7 +99,8 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 				case 'NLM':
 					// if the XML galley is a PDF galley then render the XSL-FO stylesheet
 					if ($this->isPdfGalley()) {
-						$xslSheet = $xmlGalleyPlugin->getPluginPath() . '/transform/nlm/nlm-fo.xsl';
+						$xslSheet = $xmlGalleyPlugin->getPluginPath() . '/transform/jpub/jpub3-APAcit-xslfo.xsl';
+						$xsltRenderer = "saxon";
 					} else {
 						$xslSheet = $xmlGalleyPlugin->getPluginPath() . '/transform/nlm/nlm-xhtml.xsl';
 					}
@@ -111,11 +112,6 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 					$xslSheet = $journalFileManager->filesDir . $xmlGalleyPlugin->getSetting($journal->getId(), 'customXSL');
 					break;
 			}
-
-			// TODO: this transform is not working
-			error_log('FOP transform: ' . $this->getFilePath());
-			error_log('FOP sheet: ' . $xslSheet);
-			error_log('FOP renderer: ' . $xsltRenderer);
 
 			// transform the XML using whatever XSLT processor we have available
 			$contents = $this->transformXSLT($this->getFilePath(), $xslSheet, $xsltRenderer);
@@ -361,6 +357,35 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 				return $contents;
 			}
 
+		}
+
+		if ( $xsltType == "saxon" ) {
+			// PDF transform using java, saxon and XSLT 2.0
+
+			// TODO: this needs to be loaded from a setting
+			$xsltType = '/usr/bin/saxonb-xslt -ext:on %xml %xsl';
+
+			// parse the external command to check for %xsl and %xml parameter substitution
+			if ( strpos($xsltType, '%xsl') === false ) return false;
+
+			// perform %xsl and %xml replacements for fully-qualified shell command
+			$xsltCommand = str_replace(array('%xsl', '%xml'), array($xslFile, $xmlFile), $xsltType);
+
+			// check for safe mode and escape the shell command
+			if( !ini_get('safe_mode') ) $xsltCommand = escapeshellcmd($xsltCommand);
+
+			// run the shell command and get the results
+			exec($xsltCommand . ' 2>&1', $contents, $status);
+
+			// if there is an error, spit out the shell results to aid debugging
+			if ($status != false) {
+				if ($contents != '') {
+					echo implode("\n", $contents);
+					return true;
+				} else return false;
+			}
+
+			return implode("\n", $contents);
 		}
 
 		if ( $xsltType != "" ) {
