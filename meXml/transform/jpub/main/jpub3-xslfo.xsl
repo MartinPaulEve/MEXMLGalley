@@ -278,6 +278,18 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   <xsl:attribute name="line-height">18pt</xsl:attribute>
 </xsl:attribute-set>
 
+<xsl:attribute-set name="journal-title" use-attribute-sets="outset title">
+  <xsl:attribute name="font-size">16pt</xsl:attribute>
+  <xsl:attribute name="line-height">18pt</xsl:attribute>
+  <xsl:attribute name="color">#ffffff</xsl:attribute>
+</xsl:attribute-set>
+
+<xsl:attribute-set name="journal-uri">
+  <xsl:attribute name="font-size">11pt</xsl:attribute>
+  <xsl:attribute name="line-height">14pt</xsl:attribute>
+  <xsl:attribute name="color">#000000</xsl:attribute>
+</xsl:attribute-set>
+
 <xsl:attribute-set name="section-title" use-attribute-sets="outset title">
   <xsl:attribute name="font-size">14pt</xsl:attribute>
   <xsl:attribute name="line-height">16pt</xsl:attribute>
@@ -788,15 +800,29 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 
 <xsl:template name="set-article-cover-page">
-  <!-- the article title and subtitle -->
+  <!-- the journal title on a blue bar background -->
+  <fo:block-container>
+  <xsl:for-each select="/article/front/journal-meta">
+		<fo:block-container background-color="#069" width="100%" display-align="center" height="70px">
+			<fo:block space-after="12pt">
+				<xsl:apply-templates mode="cover-page" select="journal-id"/>
+			</fo:block>
+		</fo:block-container>
+		<fo:block space-after="12pt">
+			<xsl:apply-templates mode="cover-page" select="uri"/>
+		</fo:block>
+  </xsl:for-each>
+  </fo:block-container>
+
+  <!-- the article title and subtitle 
   <xsl:for-each select="/article/front/article-meta/title-group">
     <fo:block space-after="12pt">
       <xsl:apply-templates mode="cover-page" select="article-title | subtitle"
       />
     </fo:block>
-  </xsl:for-each>
+  </xsl:for-each> -->
 
-  <!-- the two metadata tables -->
+  <!-- the two metadata tables 
   <fo:table space-after="24pt" border-style="none">
     <fo:table-body>
       <fo:table-row width="2.75in">
@@ -811,7 +837,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
         </fo:table-cell>
       </fo:table-row>
     </fo:table-body>
-  </fo:table>
+  </fo:table> -->
 
   <!-- the rest of the cover-page metadata, set like sections w/paragraphs -->
   <fo:block font-family="{$textfont}" font-size="{$textsize}"
@@ -1019,6 +1045,18 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
       </xsl:for-each>
     </xsl:with-param>
   </xsl:call-template>
+</xsl:template>
+
+<xsl:template match="journal-id" mode="cover-page">
+	<fo:block xsl:use-attribute-sets="journal-title">
+          <xsl:apply-templates />
+        </fo:block>
+</xsl:template>
+
+<xsl:template match="uri" mode="metadata">
+	<fo:block xsl:use-attribute-sets="journal-uri">
+          <xsl:apply-templates />
+        </fo:block>
 </xsl:template>
 
 
@@ -2261,6 +2299,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
     <xsl:apply-templates mode="cover-page"/>
   </fo:block>
 </xsl:template>
+
 
 
 <xsl:template mode="cover-page" match="trans-title">
