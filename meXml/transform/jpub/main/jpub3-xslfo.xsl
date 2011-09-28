@@ -611,7 +611,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 
 <xsl:template match="article">
-  <fo:page-sequence master-reference="cover-sequence" force-page-count="even">
+  <fo:page-sequence master-reference="cover-sequence" force-page-count="odd">
     <xsl:call-template name="define-footnote-separator"/>
     <fo:flow flow-name="body">
       <fo:block line-stacking-strategy="font-height"
@@ -808,6 +808,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 
 <xsl:template name="set-article-cover-page">
+
   <!-- the journal title on a blue bar background -->
   <fo:block-container>
   <xsl:for-each select="/article/front/journal-meta">
@@ -825,7 +826,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
   <!-- article data -->
   <xsl:for-each select="/article/front/article-meta">
-  <fo:table space-after="24pt" border-style="none">
+  <fo:table space-after="5pt" border-style="none">
     <fo:table-body>
       <fo:table-row width="100%">
         <fo:table-cell width="1.5in"><fo:block><xsl:text>Author(s):</xsl:text></fo:block></fo:table-cell>
@@ -938,91 +939,27 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 			</fo:block>
 		</fo:table-cell>
 	</fo:table-row>
-</xsl:for-each>
-
-
-
+	</xsl:for-each>
 	</fo:table-body>
 	</fo:table>
 
-	<!--<xsl:apply-templates select="contrib-group"/>
-	<xsl:for-each select="contrib">
-		<xsl:call-template name="contrib-identify"/>
-	</xsl:for-each>-->
-<!--      <xsl:apply-templates select="contrib-group"/>
-      <xsl:call-template name="set-copyright-note"/>
-      <xsl:apply-templates select="title-group"/>-->
-
-
-  <!--  <xsl:call-template name="banner-rule"/>
-
-    <fo:block xsl:use-attribute-sets="contrib-block">
-      <xsl:apply-templates select="contrib-group"/>
-      <xsl:apply-templates select="aff" mode="contrib"/>
-      <xsl:apply-templates select="author-notes"/>
-    </fo:block>
 
     <xsl:variable name="abstracts"
-
-          select="abstract[not(@abstract-type='toc')] |
-          trans-abstract[not(@abstract-type='toc')]"/>
+          select="title-group/abstract[not(@abstract-type='toc')] |
+          title-group/trans-abstract[not(@abstract-type='toc')]"/>
 
     <xsl:if test="$abstracts">
       <xsl:call-template name="banner-rule"/>
     </xsl:if>
+
+    <fo:block space-after="10px"><xsl:text>Abstract:</xsl:text></fo:block>
+
     <xsl:apply-templates select="$abstracts"/>
-    -->
-    <!-- then a rule before the article body -->
+
     <xsl:call-template name="banner-rule"/>
 
   </xsl:for-each>
 
-
-
-  <!-- the article title and subtitle 
-  <xsl:for-each select="/article/front/article-meta/title-group">
-    <fo:block space-after="12pt">
-      <xsl:apply-templates mode="cover-page" select="article-title | subtitle"
-      />
-    </fo:block>
-  </xsl:for-each> -->
-
-  <!-- the two metadata tables 
-  <fo:table space-after="24pt" border-style="none">
-    <fo:table-body>
-      <fo:table-row width="2.75in">
-        <fo:table-cell>
-          <xsl:call-template name="make-journal-metadata-table"/>
-        </fo:table-cell>
-        <fo:table-cell width="0.5in">
-          <fo:block/>
-        </fo:table-cell>
-        <fo:table-cell width="2.75in">
-          <xsl:call-template name="make-article-metadata-table"/>
-        </fo:table-cell>
-      </fo:table-row>
-    </fo:table-body>
-  </fo:table> -->
-
-  <!-- the rest of the cover-page metadata, set like sections w/paragraphs -->
-  <fo:block font-family="{$textfont}" font-size="{$textsize}"
-    line-height="{$textleading}" font-style="normal" font-weight="normal"
-    text-align="start">
-    <xsl:apply-templates mode="cover-page"
-      select="/article/front/article-meta/title-group/trans-title-group
-            | /article/front/article-meta/title-group/alt-title"/>
-
-
-    <xsl:apply-templates mode="metadata"
-      select="/article/front/article-meta/article-categories
-            | /article/front/article-meta/kwd-group
-            | /article/front/article-meta/supplementary-material
-            | /article/front/article-meta/counts
-            | /article/front/article-meta/custom-meta-group"/>
-
-    <xsl:apply-templates select="/article/front/notes/*"/>
-
-  </fo:block>
 </xsl:template>
 
 <xsl:template name="make-journal-metadata-table">
@@ -1123,13 +1060,14 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
     </fo:block>
 
     <xsl:call-template name="banner-rule"/>
+
 <!--
     <fo:block xsl:use-attribute-sets="contrib-block">
       <xsl:apply-templates select="contrib-group"/>
       <xsl:apply-templates select="aff" mode="contrib"/>
       <xsl:apply-templates select="author-notes"/>
     </fo:block>-->
-
+<!--
     <xsl:variable name="abstracts"
           select="abstract[not(@abstract-type='toc')] |
           trans-abstract[not(@abstract-type='toc')]"/>
@@ -1137,7 +1075,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
     <xsl:if test="$abstracts">
       <xsl:call-template name="banner-rule"/>
     </xsl:if>
-    <xsl:apply-templates select="$abstracts"/>
+    <xsl:apply-templates select="$abstracts"/>-->
     
     <!-- then a rule before the article body -->
     <xsl:call-template name="banner-rule"/>
@@ -2401,8 +2339,14 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   </fo:block>
 </xsl:template>
 
+<xsl:template match="abstract | trans-abstract" mode="cover-page">
+  <fo:block>   
+<xsl:text>HERE:</xsl:text>
+    <xsl:apply-templates/>
+  </fo:block>
+</xsl:template>
 
-<xsl:template match="abstract | trans-abstract">
+<!--<xsl:template match="abstract | trans-abstract">
   <fo:block xsl:use-attribute-sets="abstract">
     <xsl:apply-templates select="." mode="label"/>
     <xsl:if test="not(title)">
@@ -2417,7 +2361,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
     </xsl:if>
     <xsl:apply-templates/>
   </fo:block>
-</xsl:template>
+</xsl:template>-->
 
 
 <xsl:template name="set-correspondence-note">
