@@ -833,8 +833,8 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 	<fo:table-cell>
 	<xsl:for-each select="contrib-group/contrib">      
 	<fo:block>
-		    <xsl:call-template name="contrib-identify"/>
-		    <xsl:call-template name="contrib-info"/>
+		    <xsl:call-template name="contrib-identify-cover"/>
+		    <xsl:call-template name="contrib-info-cover"/>
 	</fo:block>
 	</xsl:for-each>
 	</fo:table-cell>
@@ -983,63 +983,6 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   </xsl:for-each>
 </xsl:template>
 
-<xsl:template name="make-article-metadata-table">
-  <!-- Builds a table listing article-level metadata
-       Don't be confused: this entire table fits into a table
-       cell on the cover page -->
-  <xsl:for-each select="/article/front/article-meta">
-    <fo:table border-style="none" width="2.75in">
-      <fo:table-body>
-        <xsl:call-template name="make-metadata-cell">
-          <xsl:with-param name="contents">
-            <fo:wrapper xsl:use-attribute-sets="coverpage-heading">
-              <xsl:text>Article/Issue Information</xsl:text>
-            </fo:wrapper>
-          </xsl:with-param>
-        </xsl:call-template>
-
-        <xsl:apply-templates mode="metadata"
-          select="email | ext-link | uri | self-uri"/>
-
-        <xsl:apply-templates mode="metadata" select="product"/>
-
-        <!-- 
-          Handled in template "set-copyright-note"
-          <xsl:apply-templates mode="metadata" select="permissions"/>
-          -->
-
-        <xsl:apply-templates mode="metadata" select="history/date"/>
-
-        <xsl:apply-templates mode="metadata" select="pub-date"/>
-
-        <xsl:call-template name="volume-info"/>
-        <!-- handles volume?, volume-id*, volume-series? -->
-
-        <xsl:call-template name="issue-info"/>
-        <!-- handles issue?, issue-id*, issue-title*,
-                   issue-sponsor*, issue-part? -->
-
-        <xsl:call-template name="page-info"/>
-        <!-- handles (fpage, lpage?, page-range?) -->
-
-        <xsl:apply-templates mode="metadata" select="elocation-id"/>
-
-        <xsl:apply-templates mode="metadata" select="isbn"/>
-
-        <xsl:apply-templates mode="metadata"
-          select="supplement | related-article | conference"/>
-
-        <xsl:apply-templates mode="metadata" select="article-id"/>
-
-        <xsl:apply-templates mode="metadata" select="funding-group/*"/>
-        <!-- includes (award-group*, funding-statement*,
-                   open-access?) -->
-
-      </fo:table-body>
-    </fo:table>
-  </xsl:for-each>
-</xsl:template>
-
 
 <xsl:template name="set-article">
   
@@ -1056,28 +999,17 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
     <fo:block>
       <xsl:call-template name="set-copyright-note"/>
-      <xsl:apply-templates select="title-group"/>
+      <xsl:apply-templates select="title-group/*[not(self::abstract)]"/>
     </fo:block>
 
     <xsl:call-template name="banner-rule"/>
 
-<!--
     <fo:block xsl:use-attribute-sets="contrib-block">
-      <xsl:apply-templates select="contrib-group"/>
-      <xsl:apply-templates select="aff" mode="contrib"/>
-      <xsl:apply-templates select="author-notes"/>
-    </fo:block>-->
-<!--
-    <xsl:variable name="abstracts"
-          select="abstract[not(@abstract-type='toc')] |
-          trans-abstract[not(@abstract-type='toc')]"/>
+      <xsl:apply-templates select="contrib-group" mode="opener"/>
+      <xsl:apply-templates select="aff" mode="opener"/>
+      <xsl:apply-templates select="author-notes" mode="opener"/>
+    </fo:block>
 
-    <xsl:if test="$abstracts">
-      <xsl:call-template name="banner-rule"/>
-    </xsl:if>
-    <xsl:apply-templates select="$abstracts"/>-->
-    
-    <!-- then a rule before the article body -->
     <xsl:call-template name="banner-rule"/>
 
   </xsl:for-each>
@@ -2073,7 +2005,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 
 <xsl:template match="title-group/article-title">
-    <xsl:apply-templates/>
+    <xsl:apply-templates />
 </xsl:template>
 
 
@@ -2129,43 +2061,54 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
                  (anonymous | collab | name | degrees | xref) -->
             </xsl:call-template>
           </fo:table-cell>
-          <fo:table-cell padding-left="2em">
-            <xsl:call-template name="contrib-info">
-              <!-- handles
-                 (address | aff | author-comment | bio | email |
-                  ext-link | on-behalf-of | role | uri) -->
-            </xsl:call-template>
-          </fo:table-cell>
         </fo:table-row>
       </xsl:for-each>
       <!-- end of contrib -->
-      <xsl:variable name="misc-contrib-data"
-        select="*[not(self::contrib | self::xref)]"/>
-      <xsl:if test="$misc-contrib-data">
-        <fo:table-row>
-          <fo:table-cell>
-            <fo:block/>
-          </fo:table-cell>
-          <fo:table-cell padding-left="2em">
-            <fo:block>
-              <xsl:apply-templates select="$misc-contrib-data"/>
-            </fo:block>
-          </fo:table-cell>
-        </fo:table-row>
-      </xsl:if>
     </fo:table-body>
   </fo:table>
 </xsl:template>
 
-
-<xsl:template name="contrib-identify">
+<xsl:template name="contrib-identify-cover">
   <!-- Placed in a left-hand pane  -->
-
+  <fo:block xsl:use-attribute-sets="contrib">
     <xsl:apply-templates select="anonymous | collab | name"
       mode="contrib"/>
     <!-- degrees | xref will be handled along with the last
          of these children by the contrib-amend template -->
+  </fo:block>
+</xsl:template>
 
+<xsl:template name="contrib-identify">
+  <!-- Placed in a left-hand pane  -->
+  <fo:block xsl:use-attribute-sets="contrib">
+    <xsl:apply-templates select="anonymous | collab | name"
+      mode="opener"/>
+  </fo:block>
+</xsl:template>
+
+
+<xsl:template match="anonymous" mode="opener">
+  <fo:block>
+    <xsl:text>Anonymous</xsl:text>
+    
+  </fo:block>
+</xsl:template>
+
+
+<xsl:template match="collab" mode="opener">
+  <fo:block>
+      <xsl:apply-templates mode="opener"/>
+  </fo:block>
+</xsl:template>
+
+
+
+<xsl:template match="contrib/name" mode="opener">
+  <fo:block>
+    <!-- (surname, given-names?, prefix?, suffix?) -->
+    <xsl:call-template name="write-name"/>
+    
+  </fo:block>
 </xsl:template>
 
 
@@ -2208,8 +2151,6 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 </xsl:template>
 
 
-
-
 <xsl:template name="contrib-amend">
   <!-- the context will be a contrib/anonymous, contrib/collab
        or contrib/name; this template adds contrib/degrees and 
@@ -2233,6 +2174,10 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   <xsl:apply-templates/>
 </xsl:template>
 
+<xsl:template match="degrees" mode="opener">
+<!-- suppress -->
+</xsl:template>
+
 
 <xsl:template match="xref" mode="contrib">
     <fo:inline>
@@ -2240,8 +2185,21 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
     </fo:inline>
 </xsl:template>
 
+<xsl:template match="xref" mode="opener">
+<!-- suppress -->
+</xsl:template>
+
 
 <xsl:template name="contrib-info">
+  <!-- Placed in a right-hand pane -->
+    <fo:inline>
+    <xsl:apply-templates mode="opener"
+      select="address | aff | author-comment | email |
+              ext-link | on-behalf-of | role | uri"/>
+    </fo:inline>
+</xsl:template>
+
+<xsl:template name="contrib-info-cover">
   <!-- Placed in a right-hand pane -->
     <fo:inline>
     <xsl:apply-templates mode="contrib"
@@ -2277,6 +2235,9 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   </fo:block>
 </xsl:template>
 
+<xsl:template mode="opener" match="aff">
+<!-- suppress -->
+</xsl:template>
 
 <xsl:template mode="contrib" match="aff">
    <fo:block xsl:use-attribute-sets="aff">
@@ -2338,30 +2299,6 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
     <xsl:apply-templates select="."/>
   </fo:block>
 </xsl:template>
-
-<xsl:template match="abstract | trans-abstract" mode="cover-page">
-  <fo:block>   
-<xsl:text>HERE:</xsl:text>
-    <xsl:apply-templates/>
-  </fo:block>
-</xsl:template>
-
-<!--<xsl:template match="abstract | trans-abstract">
-  <fo:block xsl:use-attribute-sets="abstract">
-    <xsl:apply-templates select="." mode="label"/>
-    <xsl:if test="not(title)">
-      <xsl:call-template name="main-title">
-        <xsl:with-param name="contents">
-          <fo:inline xsl:use-attribute-sets="generated">
-            <xsl:if test="self::trans-abstract">Translated </xsl:if>
-            <xsl:text>Abstract</xsl:text>
-          </fo:inline>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:if>
-    <xsl:apply-templates/>
-  </fo:block>
-</xsl:template>-->
 
 
 <xsl:template name="set-correspondence-note">
