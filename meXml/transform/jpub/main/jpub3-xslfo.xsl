@@ -279,15 +279,23 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 </xsl:attribute-set>
 
 <xsl:attribute-set name="journal-title" use-attribute-sets="outset title">
+  <xsl:attribute name="font-family">
+    <xsl:value-of select="$titlefont"/>
+  </xsl:attribute>
   <xsl:attribute name="font-size">16pt</xsl:attribute>
   <xsl:attribute name="line-height">18pt</xsl:attribute>
   <xsl:attribute name="color">#ffffff</xsl:attribute>
+  <xsl:attribute name="font-style">italic</xsl:attribute>
 </xsl:attribute-set>
 
-<xsl:attribute-set name="journal-uri">
-  <xsl:attribute name="font-size">11pt</xsl:attribute>
-  <xsl:attribute name="line-height">14pt</xsl:attribute>
+<xsl:attribute-set name="journal-metadata">
+  <xsl:attribute name="font-family">
+    <xsl:value-of select="$titlefont"/>
+  </xsl:attribute>
   <xsl:attribute name="color">#000000</xsl:attribute>
+  <xsl:attribute name="keep-with-next.within-page">always</xsl:attribute>
+  <xsl:attribute name="font-size">8pt</xsl:attribute>
+  <xsl:attribute name="line-height">8pt</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="section-title" use-attribute-sets="outset title">
@@ -803,16 +811,173 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   <!-- the journal title on a blue bar background -->
   <fo:block-container>
   <xsl:for-each select="/article/front/journal-meta">
-		<fo:block-container background-color="#069" width="100%" display-align="center" height="70px">
+		<fo:block-container background-color="#069" width="100%" display-align="center" height="50pt">
 			<fo:block space-after="12pt">
 				<xsl:apply-templates mode="cover-page" select="journal-id"/>
 			</fo:block>
 		</fo:block-container>
-		<fo:block space-after="12pt">
+		<fo:block space-after="12.pt">
 			<xsl:apply-templates mode="cover-page" select="uri"/>
+			<xsl:apply-templates mode="cover-page" select="issn"/>
 		</fo:block>
   </xsl:for-each>
   </fo:block-container>
+
+  <!-- article data -->
+  <xsl:for-each select="/article/front/article-meta">
+  <fo:table space-after="24pt" border-style="none">
+    <fo:table-body>
+      <fo:table-row width="100%">
+        <fo:table-cell width="1.5in"><fo:block><xsl:text>Author(s):</xsl:text></fo:block></fo:table-cell>
+	<fo:table-cell>
+	<xsl:for-each select="contrib-group/contrib">      
+	<fo:block>
+		    <xsl:call-template name="contrib-identify"/>
+		    <xsl:call-template name="contrib-info"/>
+	</fo:block>
+	</xsl:for-each>
+	</fo:table-cell>
+	</fo:table-row>
+
+      <fo:table-row width="100%">
+        <fo:table-cell width="1.5in"><fo:block><xsl:text>Affiliation(s):</xsl:text></fo:block></fo:table-cell>
+	<fo:table-cell>
+	<fo:block>
+	<xsl:apply-templates select="aff" mode="contrib"/>
+	</fo:block>
+	</fo:table-cell>
+	</fo:table-row>
+
+	<fo:table-row width="100%">
+		<fo:table-cell width="1.5in"><fo:block><xsl:text>Title:</xsl:text></fo:block></fo:table-cell>
+		<fo:table-cell>
+			<fo:block>
+				<xsl:for-each select="/article/front/article-meta/title-group">
+					<xsl:apply-templates select="article-title"/>
+				</xsl:for-each>
+			</fo:block>
+		</fo:table-cell>
+	</fo:table-row>
+
+	<fo:table-row width="100%">
+		<fo:table-cell width="1.5in"><fo:block><xsl:text>Subtitle:</xsl:text></fo:block></fo:table-cell>
+		<fo:table-cell>
+			<fo:block>
+				<xsl:for-each select="/article/front/article-meta/title-group">
+					<xsl:apply-templates select="subtitle"/>
+				</xsl:for-each>
+			</fo:block>
+		</fo:table-cell>
+	</fo:table-row>
+
+	<fo:table-row width="100%">
+		<fo:table-cell width="1.5in"><fo:block><xsl:text>Date:</xsl:text></fo:block></fo:table-cell>
+		<fo:table-cell>
+			<fo:block>
+				<xsl:apply-templates mode="cover-page" select="pub-date"/>
+			</fo:block>
+		</fo:table-cell>
+	</fo:table-row>
+
+	<fo:table-row width="100%">
+		<fo:table-cell width="1.5in"><fo:block><xsl:text>Volume:</xsl:text></fo:block></fo:table-cell>
+		<fo:table-cell>
+			<fo:block>
+			       <xsl:apply-templates mode="cover-page" select="volume"/>
+			</fo:block>
+		</fo:table-cell>
+	</fo:table-row>
+
+	<fo:table-row width="100%">
+		<fo:table-cell width="1.5in"><fo:block><xsl:text>Issue:</xsl:text></fo:block></fo:table-cell>
+		<fo:table-cell>
+			<fo:block>
+			       <xsl:apply-templates mode="cover-page" select="issue"/>
+			</fo:block>
+		</fo:table-cell>
+	</fo:table-row>
+
+	<fo:table-row width="100%">
+		<fo:table-cell width="1.5in"><fo:block><xsl:text>URL:</xsl:text></fo:block></fo:table-cell>
+		<fo:table-cell>
+			<fo:block>
+			       <xsl:apply-templates mode="cover-page" select="self-uri"/>
+			</fo:block>
+		</fo:table-cell>
+	</fo:table-row>
+
+
+	<xsl:for-each select="/article/front/article-meta/article-id">
+	<fo:table-row width="100%">
+		<fo:table-cell width="1.5in"><fo:block><xsl:choose>
+        <xsl:when test="@pub-id-type='art-access-id'">Accession ID</xsl:when>
+        <xsl:when test="@pub-id-type='coden'">Coden</xsl:when>
+        <xsl:when test="@pub-id-type='doi'">DOI</xsl:when>
+        <xsl:when test="@pub-id-type='manuscript'">Manuscript ID</xsl:when>
+        <xsl:when test="@pub-id-type='medline'">Medline ID</xsl:when>
+        <xsl:when test="@pub-id-type='pii'">Publisher Item ID</xsl:when>
+        <xsl:when test="@pub-id-type='pmid'">PubMed ID</xsl:when>
+        <xsl:when test="@pub-id-type='publisher-id'">Publisher ID</xsl:when>
+        <xsl:when test="@pub-id-type='sici'">Serial Item and Contribution
+          ID</xsl:when>
+        <xsl:when test="@pub-id-type='doaj'">DOAJ ID</xsl:when>
+        <xsl:otherwise>
+          <xsl:text>Article Id</xsl:text>
+          <xsl:for-each select="@pub-id-type">
+            <xsl:text> (</xsl:text>
+            <fo:inline xsl:use-attribute-sets="data">
+              <xsl:value-of select="."/>
+            </fo:inline>
+            <xsl:text>)</xsl:text>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>:</fo:block></fo:table-cell>
+		<fo:table-cell>
+			<fo:block>
+			       <xsl:apply-templates mode="cover-page" select="."/>
+			</fo:block>
+		</fo:table-cell>
+	</fo:table-row>
+</xsl:for-each>
+
+
+
+	</fo:table-body>
+	</fo:table>
+
+	<!--<xsl:apply-templates select="contrib-group"/>
+	<xsl:for-each select="contrib">
+		<xsl:call-template name="contrib-identify"/>
+	</xsl:for-each>-->
+<!--      <xsl:apply-templates select="contrib-group"/>
+      <xsl:call-template name="set-copyright-note"/>
+      <xsl:apply-templates select="title-group"/>-->
+
+
+  <!--  <xsl:call-template name="banner-rule"/>
+
+    <fo:block xsl:use-attribute-sets="contrib-block">
+      <xsl:apply-templates select="contrib-group"/>
+      <xsl:apply-templates select="aff" mode="contrib"/>
+      <xsl:apply-templates select="author-notes"/>
+    </fo:block>
+
+    <xsl:variable name="abstracts"
+
+          select="abstract[not(@abstract-type='toc')] |
+          trans-abstract[not(@abstract-type='toc')]"/>
+
+    <xsl:if test="$abstracts">
+      <xsl:call-template name="banner-rule"/>
+    </xsl:if>
+    <xsl:apply-templates select="$abstracts"/>
+    -->
+    <!-- then a rule before the article body -->
+    <xsl:call-template name="banner-rule"/>
+
+  </xsl:for-each>
+
+
 
   <!-- the article title and subtitle 
   <xsl:for-each select="/article/front/article-meta/title-group">
@@ -958,12 +1123,12 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
     </fo:block>
 
     <xsl:call-template name="banner-rule"/>
-
+<!--
     <fo:block xsl:use-attribute-sets="contrib-block">
       <xsl:apply-templates select="contrib-group"/>
       <xsl:apply-templates select="aff" mode="contrib"/>
       <xsl:apply-templates select="author-notes"/>
-    </fo:block>
+    </fo:block>-->
 
     <xsl:variable name="abstracts"
           select="abstract[not(@abstract-type='toc')] |
@@ -1048,15 +1213,29 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 </xsl:template>
 
 <xsl:template match="journal-id" mode="cover-page">
-	<fo:block xsl:use-attribute-sets="journal-title">
+	<fo:block xsl:use-attribute-sets="journal-title" margin-left="10px">
           <xsl:apply-templates />
         </fo:block>
 </xsl:template>
 
-<xsl:template match="uri" mode="metadata">
-	<fo:block xsl:use-attribute-sets="journal-uri">
-          <xsl:apply-templates />
+<xsl:template match="uri" mode="cover-page">
+	<fo:block xsl:use-attribute-sets="journal-metadata" text-align="right">
+          <xsl:call-template name="make-external-link-no-attribute-set" />
         </fo:block>
+</xsl:template>
+
+<xsl:template match="self-uri" mode="cover-page">
+          <xsl:call-template name="make-external-link-no-attribute-set" />
+</xsl:template>
+
+<xsl:template match="issn" mode="cover-page">
+  <xsl:call-template name="colon-separated-entry">
+    <xsl:with-param name="label">
+      <xsl:text>ISSN</xsl:text>
+      <xsl:call-template name="append-pub-type"/>
+    </xsl:with-param>
+  </xsl:call-template>
+
 </xsl:template>
 
 
@@ -1277,6 +1456,9 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   </xsl:call-template>
 </xsl:template>
 
+<xsl:template match="pub-date" mode="cover-page">
+      <xsl:call-template name="format-date"/>
+</xsl:template>
 
 <xsl:template match="pub-date" mode="metadata">
   <xsl:call-template name="metadata-labeled-entry-cell">
@@ -1953,16 +2135,12 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 
 <xsl:template match="title-group/article-title">
-  <fo:block xsl:use-attribute-sets="firstpage-title">
     <xsl:apply-templates/>
-  </fo:block>
 </xsl:template>
 
 
 <xsl:template match="title-group/subtitle">
-  <fo:block xsl:use-attribute-sets="firstpage-subtitle">
     <xsl:apply-templates/>
-  </fo:block>
 </xsl:template>
 
 
@@ -2044,17 +2222,16 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 <xsl:template name="contrib-identify">
   <!-- Placed in a left-hand pane  -->
-  <fo:block xsl:use-attribute-sets="contrib">
+
     <xsl:apply-templates select="anonymous | collab | name"
       mode="contrib"/>
     <!-- degrees | xref will be handled along with the last
          of these children by the contrib-amend template -->
-  </fo:block>
+
 </xsl:template>
 
 
 <xsl:template match="anonymous" mode="contrib">
-  <fo:block>
     <xsl:text>Anonymous</xsl:text>
     <xsl:call-template name="contrib-amend">
       <xsl:with-param name="last-contrib"
@@ -2062,12 +2239,11 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
       <!-- passes Boolean false if we are inside the last
                contrib -->
     </xsl:call-template>
-  </fo:block>
 </xsl:template>
 
 
 <xsl:template match="collab" mode="contrib">
-  <fo:block>
+    <fo:inline>
       <xsl:apply-templates/>
       <xsl:call-template name="contrib-amend">
         <xsl:with-param name="last-contrib"
@@ -2075,13 +2251,13 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
           <!-- passes Boolean false if we are inside the last
                contrib -->
       </xsl:call-template>
-  </fo:block>
+    </fo:inline>
 </xsl:template>
 
 
 
 <xsl:template match="contrib/name" mode="contrib">
-  <fo:block>
+    <fo:inline>
     <!-- (surname, given-names?, prefix?, suffix?) -->
     <xsl:call-template name="write-name"/>
     <xsl:call-template name="contrib-amend">
@@ -2090,8 +2266,10 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
           <!-- passes Boolean false if we are inside the last
                contrib -->
     </xsl:call-template>
-  </fo:block>
+    </fo:inline>
 </xsl:template>
+
+
 
 
 <xsl:template name="contrib-amend">
@@ -2119,17 +2297,19 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 
 <xsl:template match="xref" mode="contrib">
+    <fo:inline>
   <xsl:apply-templates select="."/>
+    </fo:inline>
 </xsl:template>
 
 
 <xsl:template name="contrib-info">
   <!-- Placed in a right-hand pane -->
-  <fo:block xsl:use-attribute-sets="contrib">
+    <fo:inline>
     <xsl:apply-templates mode="contrib"
       select="address | aff | author-comment | email |
               ext-link | on-behalf-of | role | uri"/>
-  </fo:block>
+    </fo:inline>
 </xsl:template>
 
 
@@ -2202,9 +2382,9 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 
 <xsl:template match="role" mode="contrib">
-  <fo:block xsl:use-attribute-sets="contrib">
+
     <xsl:apply-templates/>
-  </fo:block>
+
 </xsl:template>
 
 
@@ -4560,6 +4740,33 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 	  </fo:basic-link>
 </xsl:template>
 
+<xsl:template name="make-external-link-no-attribute-set">
+  <xsl:param name="href">
+   <xsl:choose>
+      <xsl:when test="normalize-space()">
+        <xsl:apply-templates/>
+      </xsl:when>
+      <xsl:otherwise>
+	 <xsl:value-of select="@contents"/>
+      </xsl:otherwise>
+   </xsl:choose>
+  </xsl:param>
+  <xsl:param name="contents">
+    <xsl:choose>
+      <xsl:when test="normalize-space()">
+        <xsl:apply-templates/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="@xlink:href"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:param> 
+	  <fo:basic-link external-destination="{normalize-space($href)}"
+	    show-destination="new">
+	    <xsl:copy-of select="$contents"/>
+	  </fo:basic-link>
+</xsl:template>
+
 
 <xsl:template name="resolve-href">
   <!-- prepends an @xlink:href value with the $base-dir
@@ -4633,6 +4840,20 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
       <xsl:copy-of select="$contents"/>
     </xsl:with-param>
   </xsl:call-template>
+</xsl:template>
+
+<xsl:template name="colon-separated-entry">
+  <xsl:param name="label"/>
+  <xsl:param name="contents">
+    <xsl:apply-templates/>
+  </xsl:param>
+      <xsl:if test="normalize-space($label)">
+        <fo:block xsl:use-attribute-sets="journal-metadata" text-align="right">
+          <xsl:copy-of select="$label"/>
+          <xsl:text>: </xsl:text>
+          <xsl:copy-of select="$contents"/>
+        </fo:block>
+      </xsl:if>
 </xsl:template>
 
 
