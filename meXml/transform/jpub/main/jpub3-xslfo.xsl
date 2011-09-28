@@ -153,7 +153,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 <!-- Most typographical specification is done below by named
      attribute sets, but a few global variables are useful.        -->
 
-<xsl:variable name="mainindent" select="'5pc'"/>
+<xsl:variable name="mainindent" select="'1pc'"/>
 
 <!-- Font used for Section titles and the like. -->
 <xsl:variable name="titlefont">sans-serif</xsl:variable>
@@ -2005,12 +2005,16 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 
 <xsl:template match="title-group/article-title">
-    <xsl:apply-templates />
+    <fo:block xsl:use-attribute-sets="firstpage-title">
+    <xsl:apply-templates/>
+  </fo:block>
 </xsl:template>
 
 
 <xsl:template match="title-group/subtitle">
+    <fo:block xsl:use-attribute-sets="firstpage-subtitle">
     <xsl:apply-templates/>
+  </fo:block>
 </xsl:template>
 
 
