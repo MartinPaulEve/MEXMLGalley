@@ -2750,15 +2750,45 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
     <!-- graphics and media are only allowed to float
          when they appear outside the named elements -->
     <xsl:with-param name="allow-float"
-      select="$allow-float and
+      select="false"/>
+    <xsl:with-param name="contents">
+      <fo:block-container xsl:use-attribute-sets="media-object">
+        <xsl:apply-templates select="@orientation"/>
+          <fo:block line-stacking-strategy="max-height">
+            <fo:external-graphic src="url('{$href}')"
+              content-width="scale-down-to-fit"
+              scaling="uniform" width="100%"/>
+            <xsl:apply-templates select="." mode="label"/>
+            <xsl:apply-templates/>
+          </fo:block>
+      </fo:block-container>
+    </xsl:with-param>
+  </xsl:call-template>
+</xsl:template>
+
+<!--
+$allow-float and
               not(ancestor::boxed-text | 
+
                   ancestor::chem-struct-wrap |
                   ancestor::disp-formula |
                   ancestor::fig | ancestor::fig-group |
                   ancestor::preformat |
                   ancestor::supplementary-material |
+
                   ancestor::table-wrap |
-                  ancestor::table-wrap-group)"/>
+                  ancestor::table-wrap-group)
+
+<xsl:template match="graphic | media">
+  <xsl:param name="allow-float" select="true()"/>
+  <xsl:variable name="href">
+    <xsl:call-template name="resolve-href"/>
+  </xsl:variable>
+  <xsl:call-template name="set-float">
+   graphics and media are only allowed to float
+         when they appear outside the named elements
+    <xsl:with-param name="allow-float"
+      select="false"/>
     <xsl:with-param name="contents">
       <fo:block-container xsl:use-attribute-sets="media-object">
         <xsl:apply-templates select="@orientation"/>
@@ -2775,7 +2805,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
     </xsl:with-param>
   </xsl:call-template>
 </xsl:template>
-
+-->
 
 <xsl:template match="alt-text">
   <!-- not handled with graphic or inline-graphic -->
