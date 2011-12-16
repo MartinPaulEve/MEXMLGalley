@@ -4,7 +4,7 @@
 # Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
 
 saxon=`locate -l1 saxon9.jar`
-javacmd="java -jar $saxon -o ./transform/debug/new.fo ./transform/meXmlGalleySampleDocument.xml ./transform/jpub/jpub3-APAcit-xslfo.xsl"
+javacmd="java -jar $saxon -o ./transform/debug/new.fo ./transform/debug/meXmlGalleySampleDocument.xml ./transform/jpub/jpub3-APAcit-xslfo.xsl"
 fopcmd="fop ./transform/debug/new.fo ./transform/debug/new.pdf"
 
 if [ ! -f $saxon ];
@@ -13,9 +13,9 @@ then
     exit
 fi
 
-if [ ! -f ./transform/meXmlGalleySampleDocument.xml ];
+if [ ! -f ./transform/debug/meXmlGalleySampleDocument.xml ];
 then
-    echo "ERROR: Unable to locate ./transform/meXmlGalleySampleDocument.xml. Please ensure you are running from inside the meXml directory."
+    echo "ERROR: Unable to locate ./transform/debug/meXmlGalleySampleDocument.xml. Please ensure you are running from inside the meXml directory."
     exit
 fi
 
