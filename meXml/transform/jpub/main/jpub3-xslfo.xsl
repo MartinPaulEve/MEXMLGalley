@@ -159,7 +159,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 <xsl:variable name="titlefont">sans-serif</xsl:variable>
 
 <!-- Font used for normal paragraph text.  -->
-<xsl:variable name="textfont">serif</xsl:variable>
+<xsl:variable name="textfont">Helvetica</xsl:variable>
 
 <!-- Font size for for normal paragraph text and the like. -->
 <xsl:variable name="textsize" select="'10pt'"/>
@@ -269,7 +269,6 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   <xsl:attribute name="font-family">
     <xsl:value-of select="$titlefont"/>
   </xsl:attribute>
-  <xsl:attribute name="font-weight">bold</xsl:attribute>
   <xsl:attribute name="keep-with-next.within-page">always</xsl:attribute>
 </xsl:attribute-set>
 
@@ -342,13 +341,25 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   <!--<xsl:attribute name="start-indent">0pc</xsl:attribute>-->
 </xsl:attribute-set>
 
+
 <xsl:attribute-set name="coverpage-block">
   <xsl:attribute name="space-before">6pt</xsl:attribute>
 </xsl:attribute-set>
 
+<xsl:attribute-set name="coverpage-default">
+  <xsl:attribute name="font-size">10pt</xsl:attribute>
+</xsl:attribute-set>
+
+<xsl:attribute-set name="coverpage" use-attribute-sets="coverpage-default"/>
+
+<xsl:attribute-set name="coverpage-abstract">
+  <xsl:attribute name="font-size">10pt</xsl:attribute>
+  <xsl:attribute name="text-align">justify</xsl:attribute>
+</xsl:attribute-set>
+
 <xsl:attribute-set name="coverpage-title"
   use-attribute-sets="title coverpage-block">
-  <xsl:attribute name="font-size">14pt</xsl:attribute>
+  <xsl:attribute name="font-size">12pt</xsl:attribute>
   <xsl:attribute name="line-height">17pt</xsl:attribute>
 </xsl:attribute-set>
 
@@ -561,7 +572,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 <xsl:attribute-set name="ref-list-section" use-attribute-sets="section"/>
 
 <xsl:attribute-set name="ref-list-block" use-attribute-sets="panel">
-  <xsl:attribute name="provisional-distance-between-starts">2pc</xsl:attribute>
+  <xsl:attribute name="provisional-distance-between-starts">0pc</xsl:attribute>
   <xsl:attribute name="provisional-label-separation">6pt</xsl:attribute>
 </xsl:attribute-set>
 
@@ -854,7 +865,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 		<fo:table-cell>
 			<fo:block>
 				<xsl:for-each select="/article/front/article-meta/title-group">
-					<xsl:apply-templates select="article-title"/>
+					<xsl:apply-templates mode="cover-page" select="article-title"/>
 				</xsl:for-each>
 			</fo:block>
 		</fo:table-cell>
@@ -954,7 +965,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
     <fo:block space-after="10px"><xsl:text>Abstract:</xsl:text></fo:block>
 
-    <xsl:apply-templates select="$abstracts"/>
+    <xsl:apply-templates mode="cover-page" select="$abstracts"/>
 
     <xsl:call-template name="banner-rule"/>
 
@@ -2074,7 +2085,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 <xsl:template name="contrib-identify-cover">
   <!-- Placed in a left-hand pane  -->
-  <fo:block xsl:use-attribute-sets="contrib">
+  <fo:block xsl:use-attribute-sets="coverpage">
     <xsl:apply-templates select="anonymous | collab | name"
       mode="contrib"/>
     <!-- degrees | xref will be handled along with the last
@@ -2084,7 +2095,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 <xsl:template name="contrib-identify">
   <!-- Placed in a left-hand pane  -->
-  <fo:block xsl:use-attribute-sets="contrib">
+  <fo:block xsl:use-attribute-sets="coverpage">
     <xsl:apply-templates select="anonymous | collab | name"
       mode="opener"/>
   </fo:block>
@@ -2244,7 +2255,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 </xsl:template>
 
 <xsl:template mode="contrib" match="aff">
-   <fo:block xsl:use-attribute-sets="aff">
+   <fo:block xsl:use-attribute-sets="coverpage">
      <xsl:variable name="label">
        <xsl:apply-templates select="." mode="label-text"/>
      </xsl:variable>
@@ -2258,7 +2269,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 
 <xsl:template match="aff">
-   <fo:block xsl:use-attribute-sets="paragraph aff">
+   <fo:block xsl:use-attribute-sets="coverpage">
      <xsl:variable name="label">
        <xsl:apply-templates select="." mode="label-text"/>
      </xsl:variable>
@@ -2346,21 +2357,40 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 <xsl:template mode="cover-page"
   match="/article/front/article-meta/title-group/article-title">
-  <fo:block xsl:use-attribute-sets="coverpage-title">
+  <fo:block xsl:use-attribute-sets="coverpage">
     <xsl:apply-templates mode="cover-page"/>
   </fo:block>
 </xsl:template>
 
 <xsl:template mode="cover-page"
   match="/article/front/article-meta/title-group/subtitle">
-  <fo:block xsl:use-attribute-sets="coverpage-subtitle">
+  <fo:block xsl:use-attribute-sets="coverpage">
     <xsl:apply-templates mode="cover-page"/>
   </fo:block>
 </xsl:template>
 
+<xsl:template mode="cover-page"
+  match="/article/front/article-meta/*">
+  <fo:block xsl:use-attribute-sets="coverpage">
+    <xsl:apply-templates mode="cover-page"/>
+  </fo:block>
+</xsl:template>
+
+<xsl:template mode="cover-page"
+  match="/contrib-group/*">
+  <fo:block xsl:use-attribute-sets="coverpage">
+    <xsl:apply-templates mode="cover-page"/>
+  </fo:block>
+</xsl:template>
 
 <xsl:template mode="cover-page" match="trans-title-group">
   <fo:block space-before="0pt" space-after="12pt">
+    <xsl:apply-templates mode="cover-page"/>
+  </fo:block>
+</xsl:template>
+
+<xsl:template mode="cover-page" match="abstract">
+  <fo:block space-before="0pt" space-after="12pt" xsl:use-attribute-sets="coverpage-abstract">
     <xsl:apply-templates mode="cover-page"/>
   </fo:block>
 </xsl:template>
