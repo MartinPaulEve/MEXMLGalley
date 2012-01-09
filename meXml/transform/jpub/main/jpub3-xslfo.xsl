@@ -428,8 +428,10 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 </xsl:attribute-set>
 
 <xsl:attribute-set name="paragraph-justified">
-  <xsl:attribute name="space-before">4pt</xsl:attribute>
+  <xsl:attribute name="space-before">7pt</xsl:attribute>
   <xsl:attribute name="text-align">justify</xsl:attribute>
+  <xsl:attribute name="start-indent">1pc</xsl:attribute>
+  <xsl:attribute name="text-indent">1pc</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="paragraph-tight" use-attribute-sets="paragraph">
