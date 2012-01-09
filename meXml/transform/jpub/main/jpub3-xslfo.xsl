@@ -20,7 +20,6 @@
 <!--             for printing and page display.                    -->
 <!--                                                               -->
 <!--  PROCESSOR DEPENDENCIES:                                      -->
-<!--             None: standard XSLT 1.0                           -->
 <!--             Tested using Saxon 6.5, Saxon 9.1.0.3             -->
 <!--                                                               -->
 <!--  COMPONENTS REQUIRED:                                         -->
@@ -3360,6 +3359,10 @@ $allow-float and
   <xsl:call-template name="make-external-link"/>
 </xsl:template>
 
+<xsl:template match="fn-link">
+  <xsl:call-template name="make-internal-link"/>
+</xsl:template>
+
 
 <xsl:template match="array/ext-link | chem-struct-wrap/ext-link |
                      fig-group/ext-link | fig/ext-link |
@@ -4411,6 +4414,7 @@ $allow-float and
       <xsl:otherwise>1</xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
+
   <xsl:call-template name="make-label-text">
     <xsl:with-param name="auto" select="$auto-number-fn"/>
     <xsl:with-param name="warning" select="$warning"/>
@@ -4631,6 +4635,7 @@ $allow-float and
   <xsl:param name="auto" select="false()"/>
   <xsl:param name="warning" select="false()"/>
   <xsl:param name="auto-text"/>
+
   <xsl:choose>
     <xsl:when test="$auto">
       <fo:inline xsl:use-attribute-sets="generated">
@@ -4680,6 +4685,26 @@ $allow-float and
     </xsl:choose>
   </xsl:param> 
 	  <fo:basic-link external-destination="{normalize-space($href)}"
+	    show-destination="new" xsl:use-attribute-sets="link">
+	    <xsl:copy-of select="$contents"/>
+	  </fo:basic-link>
+</xsl:template>
+
+<xsl:template name="make-internal-link">
+  <xsl:param name="href" select="@href" >
+  </xsl:param>
+  <xsl:param name="id" select="@id"/>
+  <xsl:param name="contents">
+    <xsl:choose>
+      <xsl:when test="normalize-space()">
+        <xsl:apply-templates/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="@xlink:href"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:param> 
+	  <fo:basic-link id="{$id}" internal-destination="{normalize-space($href)}"
 	    show-destination="new" xsl:use-attribute-sets="link">
 	    <xsl:copy-of select="$contents"/>
 	  </fo:basic-link>
