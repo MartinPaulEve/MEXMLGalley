@@ -260,7 +260,25 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   <xsl:attribute name="font-weight">normal</xsl:attribute>
 </xsl:attribute-set>
 
-<xsl:attribute-set name="back" use-attribute-sets="body">
+<xsl:attribute-set name="back-body">
+  <xsl:attribute name="margin-left">
+    <xsl:value-of select="$mainindent"/>
+  </xsl:attribute>
+  <xsl:attribute name="font-size">
+    <xsl:value-of select="$textfont"/>
+  </xsl:attribute>
+  <xsl:attribute name="font-size">
+    <xsl:value-of select="$textsize"/>
+  </xsl:attribute>
+  <xsl:attribute name="line-height">
+    <xsl:value-of select="$textleading"/>
+  </xsl:attribute>
+  <xsl:attribute name="text-align">start</xsl:attribute>
+  <xsl:attribute name="font-style">normal</xsl:attribute>
+  <xsl:attribute name="font-weight">normal</xsl:attribute>
+</xsl:attribute-set>
+
+<xsl:attribute-set name="back" use-attribute-sets="back-body">
   <xsl:attribute name="margin-left">0em</xsl:attribute>
 </xsl:attribute-set>
 
@@ -407,6 +425,11 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 <xsl:attribute-set name="paragraph">
   <xsl:attribute name="space-before">4pt</xsl:attribute>
+</xsl:attribute-set>
+
+<xsl:attribute-set name="paragraph-justified">
+  <xsl:attribute name="space-before">4pt</xsl:attribute>
+  <xsl:attribute name="text-align">justify</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="paragraph-tight" use-attribute-sets="paragraph">
@@ -2590,6 +2613,12 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 <xsl:template match="p">
   <fo:block xsl:use-attribute-sets="paragraph">
+    <xsl:apply-templates/>
+  </fo:block>
+</xsl:template>
+
+<xsl:template match="body/p">
+  <fo:block xsl:use-attribute-sets="paragraph-justified">
     <xsl:apply-templates/>
   </fo:block>
 </xsl:template>
