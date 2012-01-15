@@ -432,7 +432,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   <xsl:attribute name="text-align">justify</xsl:attribute>
   <xsl:attribute name="start-indent">1pc</xsl:attribute>
   <xsl:attribute name="text-indent">1pc</xsl:attribute>
-  <xsl:attribute name="font-size">14pt</xsl:attribute>
+  <xsl:attribute name="font-size">11pt</xsl:attribute>
   <xsl:attribute name="line-height">16pt</xsl:attribute>
   <xsl:attribute name="font-family">Times</xsl:attribute>
 </xsl:attribute-set>
