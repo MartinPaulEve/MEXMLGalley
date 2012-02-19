@@ -193,7 +193,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 </xsl:attribute-set>
 
 <xsl:attribute-set name="metadata-line">
-  <xsl:attribute name="font-size">9pt</xsl:attribute>
+  <xsl:attribute name="font-size">8pt</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="metadata-label">
@@ -368,6 +368,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 </xsl:attribute-set>
 
 <xsl:attribute-set name="coverpage" use-attribute-sets="coverpage-default"/>
+
 
 <xsl:attribute-set name="coverpage-abstract">
   <xsl:attribute name="font-size">10pt</xsl:attribute>
@@ -899,21 +900,12 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 	</fo:table-row>
 
 	<fo:table-row width="100%">
-		<fo:table-cell width="1.5in"><fo:block><xsl:text>Subtitle:</xsl:text></fo:block></fo:table-cell>
-		<fo:table-cell>
-			<fo:block>
-				<xsl:for-each select="/article/front/article-meta/title-group">
-					<xsl:apply-templates select="subtitle"/>
-				</xsl:for-each>
-			</fo:block>
-		</fo:table-cell>
-	</fo:table-row>
-
-	<fo:table-row width="100%">
 		<fo:table-cell width="1.5in"><fo:block><xsl:text>Date:</xsl:text></fo:block></fo:table-cell>
 		<fo:table-cell>
 			<fo:block>
-				<xsl:apply-templates mode="cover-page" select="pub-date"/>
+				<xsl:for-each select="/article/front/article-meta">
+					<xsl:apply-templates mode="metadata" select="pub-date"/>
+				</xsl:for-each>
 			</fo:block>
 		</fo:table-cell>
 	</fo:table-row>
@@ -1364,11 +1356,13 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   </xsl:call-template>
 </xsl:template>
 
-<xsl:template match="pub-date" mode="cover-page">
-      <xsl:call-template name="format-date"/>
+<xsl:template match="pub-date" mode="metadata">
+	<fo:inline xsl:use-attribute-sets="coverpage-default">
+		<xsl:call-template name="format-date"/>
+	</fo:inline>
 </xsl:template>
 
-<xsl:template match="pub-date" mode="metadata">
+<!--<xsl:template match="pub-date" mode="metadata">
   <xsl:call-template name="metadata-labeled-entry-cell">
     <xsl:with-param name="label">
       <xsl:text>Publication date</xsl:text>
@@ -1378,7 +1372,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
       <xsl:call-template name="format-date"/>
     </xsl:with-param>
   </xsl:call-template>
-</xsl:template>
+</xsl:template>-->
 
 
 <xsl:template match="volume | issue" mode="metadata-inline">
