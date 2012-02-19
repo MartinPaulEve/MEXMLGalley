@@ -251,7 +251,7 @@ class meXml extends GenericPlugin {
 
 					// check the result
 					if (trim(preg_replace("/\s+/", " ", $result)) != "Open Journal Systems Success" ) {
-						$form->addError('content', Locale::translate('plugins.generic.xmlGalley.settings.externalXSLTFailure'));
+						$form->addError('content', Locale::translate('plugins.generic.meXmlGalley.settings.externalXSLTFailure'));
 					} else $templateMgr->assign('testSuccess', true);
 
 				}
@@ -298,9 +298,9 @@ class meXml extends GenericPlugin {
 							$this->updateSetting($journal->getId(), 'XSLstylesheet', 'custom');
 							$this->updateSetting($journal->getId(), 'customXSL', $fileName);
 
-						} else $form->addError('content', Locale::translate('plugins.generic.xmlGalley.settings.customXSLInvalid'));
+						} else $form->addError('content', Locale::translate('plugins.generic.meXmlGalley.settings.customXSLInvalid'));
 
-					} else $form->addError('content', Locale::translate('plugins.generic.xmlGalley.settings.customXSLRequired'));
+					} else $form->addError('content', Locale::translate('plugins.generic.meXmlGalley.settings.customXSLRequired'));
 
 					// re-populate the form values with the new settings
 					$form->initData();

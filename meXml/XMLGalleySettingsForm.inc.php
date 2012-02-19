@@ -3,8 +3,10 @@
 /**
  * @file XMLGalleySettingsForm.inc.php
  *
- * Copyright (c) 2003-2011 John Willinsky
+ * Copyright (c) 2012 Martin Paul Eve
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+ *
+ * Portions copyright (c) 2003-2011 John Willinsky
  *
  * @class XMLGalleySettingsForm
  * @ingroup plugins_generic_xmlGalley
@@ -71,21 +73,21 @@ class XMLGalleySettingsForm extends Form {
 	 * Assign form data to user-submitted data.
 	 */
 	function readInputData() {
-		$this->readUserVars(array('XSLTrenderer', 'XSLstylesheet', 'externalXSLT', 'customXSL', 'nlmPDF', 'externalFOP'));
+		$this->readUserVars(array('XSLTrenderer', 'XSLstylesheet', 'externalXSLT', 'customXSL', 'nlmPDF', 'externalFOP', 'saxon9Location'));
 
 		// ensure that external XSLT or XSL are not blank
 		if ($this->getData('XSLTrenderer') == "external") {
-			$this->addCheck(new FormValidator($this, 'externalXSLT', 'required', 'plugins.generic.xmlGalley.settings.externalXSLTRequired'));
+			$this->addCheck(new FormValidator($this, 'externalXSLT', 'required', 'plugins.generic.meXmlGalley.settings.externalXSLTRequired'));
 		}
 
 		// if PDF rendering is enabled, then check that an external FO processor is set
 		if ($this->getData('nlmPDF') == "1") {
-			$this->addCheck(new FormValidator($this, 'externalFOP', 'required', 'plugins.generic.xmlGalley.settings.xslFOPRequired'));
+			$this->addCheck(new FormValidator($this, 'externalFOP', 'required', 'plugins.generic.meXmlGalley.settings.xslFOPRequired'));
 		}
 
 		// if the custom stylesheet button is enabled, then check that an XSL is uploaded
 		if ($this->getData('XSLstylesheet') == "custom") {
-			$this->addCheck(new FormValidator($this, 'customXSL', 'required', 'plugins.generic.xmlGalley.settings.customXSLRequired'));
+			$this->addCheck(new FormValidator($this, 'customXSL', 'required', 'plugins.generic.meXmlGalley.settings.customXSLRequired'));
 		}
 
 	}

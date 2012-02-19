@@ -9,49 +9,49 @@
  * $Id$
  *}
 {strip}
-{assign var="pageTitle" value="plugins.generic.xmlGalley.displayName"}
+{assign var="pageTitle" value="plugins.generic.meXmlGalley.displayName"}
 {include file="common/header.tpl"}
 {/strip}
 
 <div id="xmlGalleySettings">
-<div id="description">{translate key="plugins.generic.xmlGalley.settings.description"}</div>
+<div id="description">{translate key="plugins.generic.meXmlGalley.settings.description"}</div>
 
 <div class="separator">&nbsp;</div>
 
-<h3>{translate key="plugins.generic.xmlGalley.manager.settings"}</h3>
+<h3>{translate key="plugins.generic.meXmlGalley.manager.settings"}</h3>
 
 <form method="post" action="{plugin_url path="settings"}" enctype="multipart/form-data">
 {include file="common/formErrors.tpl"}
 
 {if $testSuccess}
 <p>
-	<div style="font-weight: bold; color: green;"><ul><li>{translate key="plugins.generic.xmlGalley.settings.externalXSLTSuccess"}</li></ul></div>
+	<div style="font-weight: bold; color: green;"><ul><li>{translate key="plugins.generic.meXmlGalley.settings.externalXSLTSuccess"}</li></ul></div>
 </p>
 {/if}
 
 <table width="100%" class="data">
 	<tr valign="top">
-		<td width="100%" class="label" colspan="2"><h4 id="XSLTrenderer">{fieldLabel name="XSLTrenderer" required="true" key="plugins.generic.xmlGalley.settings.renderer"}:</h4></td>
+		<td width="100%" class="label" colspan="2"><h4 id="XSLTrenderer">{fieldLabel name="XSLTrenderer" required="true" key="plugins.generic.meXmlGalley.settings.renderer"}:</h4></td>
 	</tr>
 	<tr valign="top">
 		<td width="10%" class="label" align="right"><input type="radio" name="XSLTrenderer" id="XSLTrenderer-PHP5" value="PHP5" {if !$xsltPHP5}disabled="disabled"{/if} {if $XSLTrenderer eq "PHP5"}checked="checked" {/if}/></td>
-		<td width="90%" class="value">{translate key="plugins.generic.xmlGalley.settings.PHP5"}
-		{if !$xsltPHP5}<span class="formError">{translate key="plugins.generic.xmlGalley.settings.notAvailable"}</span>{/if}
+		<td width="90%" class="value">{translate key="plugins.generic.meXmlGalley.settings.PHP5"}
+		{if !$xsltPHP5}<span class="formError">{translate key="plugins.generic.meXmlGalley.settings.notAvailable"}</span>{/if}
 		</td>
 	</tr>
 	<tr valign="top">
 		<td width="10%" class="label" align="right"><input type="radio" name="XSLTrenderer" id="XSLTrenderer-PHP4" value="PHP4" {if !$xsltPHP4}disabled="disabled"{/if} {if $XSLTrenderer eq "PHP4"}checked="checked" {/if}/></td>
-		<td width="90%" class="value">{translate key="plugins.generic.xmlGalley.settings.PHP4"}
-		{if !$xsltPHP4}<span class="formError">{translate key="plugins.generic.xmlGalley.settings.notAvailable"}</span>{/if}
+		<td width="90%" class="value">{translate key="plugins.generic.meXmlGalley.settings.PHP4"}
+		{if !$xsltPHP4}<span class="formError">{translate key="plugins.generic.meXmlGalley.settings.notAvailable"}</span>{/if}
 		</td>
 	</tr>
 	<tr valign="top">
 		<td width="10%" class="label" align="right"><input type="radio" name="XSLTrenderer" id="XSLTrenderer-external" value="external" {if $XSLTrenderer eq "external"}checked="checked" {/if}/></td>
-		<td width="90%" class="value">{translate key="plugins.generic.xmlGalley.settings.externalXSLT"}</td>
+		<td width="90%" class="value">{translate key="plugins.generic.meXmlGalley.settings.externalXSLT"}</td>
 	</tr>
 	<tr valign="top">
 		<td width="10%" class="label">&nbsp;</td>
-		<td width="90%" class="value">{translate key="plugins.generic.xmlGalley.settings.externalXSLTDescription"}</td>
+		<td width="90%" class="value">{translate key="plugins.generic.meXmlGalley.settings.externalXSLTDescription"}</td>
 	</tr>
 	<tr valign="top">
 		<td width="10%" class="label">&nbsp;</td>
@@ -63,7 +63,7 @@
 		<td width="10%" class="label">&nbsp;</td>
 		<td width="90%" class="value">
 		<a href="{plugin_url path="test"}">
-			<input type="submit" name="test" class="button defaultButton" value="{translate key="plugins.generic.xmlGalley.settings.externalXSLTTest"}"/>
+			<input type="submit" name="test" class="button defaultButton" value="{translate key="plugins.generic.meXmlGalley.settings.externalXSLTTest"}"/>
 		</a>
 		</td>
 	</tr>
@@ -75,19 +75,19 @@
 
 <table width="100%" class="data">
 	<tr valign="top">
-		<td width="100%" class="label" colspan="2"><h4 id="XSLstylesheet">{fieldLabel name="XSLstylesheet" required="true" key="plugins.generic.xmlGalley.settings.stylesheet"}:</h4></td>
+		<td width="100%" class="label" colspan="2"><h4 id="XSLstylesheet">{fieldLabel name="XSLstylesheet" required="true" key="plugins.generic.meXmlGalley.settings.stylesheet"}:</h4></td>
 	</tr>
 	<tr valign="top">
 		<td width="10%" class="label" align="right"><input type="radio" name="XSLstylesheet" id="XSLstylesheet-NLM" value="NLM" {if $XSLstylesheet eq "NLM"}checked="checked" {/if}/></td>
-		<td width="90%" class="value">{translate key="plugins.generic.xmlGalley.settings.xslNLM"}</td>
+		<td width="90%" class="value">{translate key="plugins.generic.meXmlGalley.settings.xslNLM"}</td>
 	</tr>
 	<tr valign="top">
 		<td width="10%" class="label" align="right"><input type="checkbox" name="nlmPDF" id="nlmPDF" value="1"{if $nlmPDF==1} checked="checked"{/if} /></td>
-		<td width="90%" class="value">{translate key="plugins.generic.xmlGalley.settings.xslFOP"}</td>
+		<td width="90%" class="value">{translate key="plugins.generic.meXmlGalley.settings.xslFOP"}</td>
 	</tr>
 	<tr valign="top">
 		<td width="10%" class="label">&nbsp;</td>
-		<td width="90%" class="value">{translate key="plugins.generic.xmlGalley.settings.xslFOPDescription"}</td>
+		<td width="90%" class="value">{translate key="plugins.generic.meXmlGalley.settings.xslFOPDescription"}</td>
 	</tr>
 	<tr valign="top">
 		<td width="10%" class="label">&nbsp;</td>
@@ -95,7 +95,7 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" class="label" align="right"><input type="radio" name="XSLstylesheet" id="XSLstylesheet-custom" value="custom" {if $XSLstylesheet eq "custom"}checked="checked" {/if}/></td>
-		<td width="90%" class="value">{translate key="plugins.generic.xmlGalley.settings.customXSL"}</td>
+		<td width="90%" class="value">{translate key="plugins.generic.meXmlGalley.settings.customXSL"}</td>
 	</tr>
 	<tr valign="top">
 		<td width="10%" />

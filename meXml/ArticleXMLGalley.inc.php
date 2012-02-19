@@ -3,7 +3,7 @@
 /**
  * @file ArticleXMLGalley.inc.php
  *
- * Copyright (c) 2011 Martin Paul Eve
+ * Copyright (c) 2012 Martin Paul Eve
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
  * Portions copyright (c) 2003-2011 John Willinsky
