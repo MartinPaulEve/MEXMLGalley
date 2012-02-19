@@ -3,13 +3,13 @@
 # Copyright (c) 2011 Martin Paul Eve
 # Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
 
-saxon=`locate -l1 saxon9.jar`
+saxon="./saxon9.jar"
 javacmd="java -jar $saxon -o ../transform/debug/new.fo ../transform/debug/meXmlGalleySampleDocument.xml ../transform/jpub/jpub3-APAcit-xslfo.xsl"
 fopcmd="fop ../transform/debug/new.fo ../transform/debug/new.pdf"
 
 if [ ! -f $saxon ];
 then
-    echo "ERROR: Unable to locate saxon9.jar. Please ensure that \"locate\" can find this file."
+    echo "ERROR: Unable to locate saxon9.jar. Please ensure that saxon9.jar is inside the meXml/tools directory."
     exit
 fi
 

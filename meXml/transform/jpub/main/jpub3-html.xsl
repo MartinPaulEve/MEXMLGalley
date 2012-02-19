@@ -219,24 +219,7 @@
   </xsl:template>
 
   <xsl:template match="front | front-stub">
-    <!-- First Table: journal and article metadata -->
-    <table width="100%" class="metadata two-column">
-      <tr>
-        <!-- Cell 1: journal information -->
-        <xsl:for-each select="journal-meta">
-          <!-- content model:
-				    (journal-id+, journal-title-group*, issn+, isbn*, publisher?, notes?)
-				    -->
-          <td>
-            <h4 class="generated">
-              <xsl:text>Journal Information</xsl:text>
-            </h4>
-            <div class="metadata-group">
-              <xsl:apply-templates mode="metadata"/>
-            </div>
-          </td>
-        </xsl:for-each>
-
+    <div id="article_meta">
         <!-- Cell 2: Article information -->
         <xsl:for-each select="article-meta | self::front-stub">
           <!-- content model:
@@ -299,8 +282,6 @@
               custom-meta-group
 
 				  -->
-
-          <td>
             <h4 class="generated">
               <xsl:text>Article Information</xsl:text>
             </h4>
@@ -344,48 +325,33 @@
                      open-access?) -->
               </xsl:apply-templates>
             </div>
-          </td>
         </xsl:for-each>
-      </tr>
-      <tr>
-        <td colspan="2">
-          <!-- part-rule ending this table, separating it from the
-              title-and-authors table -->
+   
           <hr class="part-rule"/>
-        </td>
-      </tr>
+       
+
       <!-- change context to front/article-meta (again) -->
       <xsl:for-each select="article-meta | self::front-stub">
-        <tr>
-          <td colspan="2">
+
             <xsl:apply-templates mode="metadata" select="title-group"/>
-          </td>
-        </tr>
+
         <xsl:apply-templates mode="metadata" select="contrib-group"/>
         <!-- back in article-meta or front-stub context -->
         <xsl:if test="aff | author-notes">
-          <tr>
-            <td/>
-            <td>
+
               <div class="metadata-group">
                 <xsl:apply-templates mode="metadata"
                   select="aff | author-notes"/>
               </div>
-            </td>
-          </tr>
+
         </xsl:if>
         <!-- abstract(s) -->
         <xsl:if test="abstract | trans-abstract">
           <!-- rule separates title+authors from abstract(s) -->
-          <tr>
-            <td colspan="2">
               <hr class="section-rule"/>
-            </td>
-          </tr>
           <xsl:for-each select="abstract | trans-abstract">
             <!-- title in left column, content (paras, secs) in right -->
-            <tr>
-              <td style="text-align: right">
+
                 <h4 class="callout-title">
                   <xsl:apply-templates select="title/node()"/>
                   <xsl:if test="not(normalize-space(title))">
@@ -395,33 +361,27 @@
                     </span>
                   </xsl:if>
                 </h4>
-              </td>
-              <td>
+
                 <xsl:apply-templates select="*[not(self::title)]"/>
-              </td>
-            </tr>
+
           </xsl:for-each>
           <!-- end of abstract or trans-abstract -->
         </xsl:if>
         <!-- end of dealing with abstracts -->
       </xsl:for-each>
       <xsl:for-each select="notes">
-        <tr>
-          <td colspan="2">
+
             <div class="metadata-group">
               <xsl:apply-templates mode="metadata" select="."/>
             </div>
-          </td>
-        </tr>
+
       </xsl:for-each>
-      <tr>
-        <td colspan="2">
+
           <!-- part-rule ending this table, separating it from the
               title-and-authors table -->
           <hr class="part-rule"/>
-        </td>
-      </tr>
-    </table>
+
+    </div>
     <!-- end of big front-matter pull -->
   </xsl:template>
   
