@@ -216,11 +216,19 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 			if ($images !== null) {
 				// TODO: this should "smart replace" the file path ($this->getFilePath()) in the XSL-FO
 				// in lieu of requiring XSL parameters, and transparently for FO that are hardcoded 
+
+				// TODO: needs to replace the directory name with associated XML galley
+				// also has to traverse (..) up /files/journals/1/articles/2/
+				// OLD: $directoryname = dirname($this->getFilePath());
+				$directoryname = "../../../../../../" . dirname($this->getAssociatedGalley()->getFilePath());
+				error_log ("Transclude directory name: " . $directoryname);
+
 				foreach ($images as $image) {
-					error_log("images");
+					error_log($image->getFileName());
+					error_log ("Image original filename: " . $image->getOriginalFileName());
 					$contents = preg_replace(
 						'/src\s*=\s*"([^"]*)' . preg_quote($image->getOriginalFileName()) . '([^"]*)"/i',
-						'src="${1}' . dirname($this->getFilePath()) . DIRECTORY_SEPARATOR . $image->getFileName() . '$2"',
+						'src="${1}' . $directoryname . DIRECTORY_SEPARATOR . $image->getFileName() . '$2"',
 						$contents );
 				}
 			}
@@ -284,14 +292,12 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 		return true;
 	}
 
-	function getImageFiles()
+	function getAssociatedGalley()
 	{
-		error_log("Override");
 		if ($this -> isHTMLGalley())
 		{
-			return parent::getImageFiles();
+			return $this;
 		} else {
-			// get the associated article
 			$assocArticle = $this->getArticleId();
 
 			// find the XML galley associated with this PDF
@@ -310,11 +316,29 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 				$xmlGalley = $articleXMLGalleyDAO->_getXMLGalleyFromId($row['galley_id'], $articleId);
 
 				if ($xmlGalley->isHTMLGalley()) {
-					error_log("Found associated XML galley for image transclusion:" . $row['galley_id'] . ".");
-					return $xmlGalley->getImageFiles();
+					error_log("Found associated XML galley:" . $row['galley_id'] . ".");
+					return $xmlGalley;
 				}
 
 				$result->moveNext();
+			}
+		}
+
+		return null;
+	}
+
+	function getImageFiles()
+	{
+		error_log("Override");
+		if ($this -> isHTMLGalley())
+		{
+			return parent::getImageFiles();
+		} else {
+			// get the associated article
+			$assocArticle = $this->getAssociatedGalley();
+	
+			if ($assocArticle != null) {
+				return $assocArticle->getImageFiles();
 			}
 
 			return null;
