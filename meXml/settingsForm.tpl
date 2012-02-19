@@ -55,7 +55,7 @@
 	</tr>
 	<tr valign="top">
 		<td width="10%" class="label">&nbsp;</td>
-		<td width="90%" class="value"><input type="text" name="externalXSLT" id="externalXSLT" value="{$externalXSLT|escape}" size="60" maxlength="90" class="textField" /></td>
+		<td width="90%" class="value"><input type="text" name="externalXSLT" id="externalXSLT" value="{$externalXSLT|escape}" size="60" class="textField" /></td>
 	</tr>
 
 {if $XSLTrenderer eq "external"}
