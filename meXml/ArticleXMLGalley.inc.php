@@ -362,8 +362,13 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 		if ( $xsltType == "saxon" ) {
 			// PDF transform using java, saxon and XSLT 2.0
 
-			// TODO: this needs to be loaded from a setting
-			$xsltType = '/usr/bin/saxonb-xslt -ext:on %xml %xsl';
+			$journal =& Request::getJournal();
+			$xmlGalleyPlugin =& PluginRegistry::getPlugin('generic', $this->parentPluginName);
+			$externalXSLT = $xmlGalleyPlugin->getSetting($journal->getId(), 'externalXSLT');
+
+			$xsltType = $externalXSLT;
+			
+			error_log("Transforming to FO: " . $xsltType);
 
 			// parse the external command to check for %xsl and %xml parameter substitution
 			if ( strpos($xsltType, '%xsl') === false ) return false;
