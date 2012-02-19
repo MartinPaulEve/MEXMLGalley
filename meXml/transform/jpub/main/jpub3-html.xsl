@@ -2609,11 +2609,10 @@
   </xsl:template>
 
 <xsl:template match="fn-link">
-    <a href="#{@rid}">
+    <a href="#{@href}" id="{@id}">
       <xsl:apply-templates/>
-    </a>
+    </a> 
 </xsl:template>
-
 
   
   <!-- ============================================================= -->
@@ -2855,8 +2854,8 @@
   
   <xsl:template match="fn" mode="footnote">
     <div class="footnote">
-      <xsl:call-template name="named-anchor"/>
-      <xsl:apply-templates/>
+      <!--<xsl:call-template name="named-anchor"/>-->
+      <xsl:apply-templates />
     </div>
   </xsl:template>
   
@@ -2871,6 +2870,8 @@
       <xsl:apply-templates/>
     </p>
   </xsl:template>
+
+
   
   
   <!-- ============================================================= -->
@@ -3184,7 +3185,8 @@
   
  
   <xsl:template match="label" mode="label-text">
-    <xsl:apply-templates mode="inline-label-text"/>
+    <xsl:apply-templates/>
+	<!-- originally: mode="inline-label-text" -->
   </xsl:template>
   
   
