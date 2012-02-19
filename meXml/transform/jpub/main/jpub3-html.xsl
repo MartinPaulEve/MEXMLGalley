@@ -49,14 +49,14 @@
   exclude-result-prefixes="xlink mml">
 
 
-  <!--<xsl:output method="xml" indent="no" encoding="UTF-8"
+  <!--<xsl:output method="xml" indent="yes" omit-xml-declaration="yes" encoding="UTF-8"
     doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
     doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>-->
 
 
-  <xsl:output doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
+  <!--<xsl:output doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
     doctype-system="http://www.w3.org/TR/html4/loose.dtd"
-    encoding="UTF-8"/>
+    encoding="UTF-8"/>-->
  
   <xsl:strip-space elements="*"/>
 
@@ -110,14 +110,9 @@
   <!--  ROOT TEMPLATE - HANDLES HTML FRAMEWORK                       -->
   <!-- ============================================================= -->
 
+  <!-- modified as this will be included inline -->
   <xsl:template match="/">
-    <html>
-      <!-- HTML header -->
-      <xsl:call-template name="make-html-header"/>
-      <body>
         <xsl:apply-templates/>
-      </body>
-    </html>
   </xsl:template>
 
 
@@ -347,7 +342,7 @@
         <!-- abstract(s) -->
         <xsl:if test="abstract | trans-abstract">
           <!-- rule separates title+authors from abstract(s) -->
-              <hr class="section-rule"/>
+              <hr class="section-rule"></hr>
           <xsl:for-each select="abstract | trans-abstract">
             <!-- title in left column, content (paras, secs) in right -->
 
@@ -378,7 +373,7 @@
 
           <!-- part-rule ending this table, separating it from the
               title-and-authors table -->
-          <hr class="part-rule"/>
+          <hr class="part-rule"></hr>
 
     </div>
     <!-- end of big front-matter pull -->
@@ -395,7 +390,7 @@
       <table width="100%" class="metadata">
         <tr>
           <td>
-            <hr class="part-rule"/>
+            <hr class="part-rule"></hr>
           </td>
         </tr>
         <tr>
@@ -426,7 +421,7 @@
       <table width="100%" class="metadata">
         <tr>
           <td>
-            <hr class="part-rule"/>
+            <hr class="part-rule"></hr>
           </td>
         </tr>
         <tr>
@@ -2474,7 +2469,7 @@
   
 
   <xsl:template match="hr">
-    <hr/>
+    <hr></hr>
   </xsl:template>
   
 

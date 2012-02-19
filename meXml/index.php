@@ -1,4 +1,4 @@
- <?php
+<?php
 
 /**
  * @defgroup plugins_generic_meXml
@@ -22,4 +22,4 @@ require_once('meXml.inc.php');
 
 return new meXml();
 
-?> 
+?>

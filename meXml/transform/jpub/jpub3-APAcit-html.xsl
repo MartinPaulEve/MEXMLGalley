@@ -44,7 +44,7 @@
   version="2.0"
   extension-element-prefixes="saxon">
 
-  <xsl:output method="html" omit-xml-declaration="yes"
+  <xsl:output method="xml" omit-xml-declaration="yes"
     encoding="utf-8" indent="no"/>
 
   <!-- <xsl:output method="xml" omit-xml-declaration="no"
