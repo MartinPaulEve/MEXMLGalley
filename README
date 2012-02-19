@@ -1,13 +1,13 @@
 ================================
 === OJS meXml Galley Plugin
 === Version: Alpha 0.1 (early stages)
-=== Author: Martin Eve <martin@martineve.com>
-=== Contributions: MJ Suhonos <mj@robotninja.com>, Alf Eaton <alf@hubmed.org>
+=== Author: Martin Paul Eve <martin@martineve.com>
+=== Contributions: John Willinsky <john.willinsky@stanford.edu>, MJ Suhonos <mj@robotninja.com>, Alf Eaton <alf@hubmed.org>
 ================================
 
 About
 -----
-This plugin for OJS allows for article galleys to be dynamically generated from an XML source file using XSLT.  The plugin contains built-in support for the NCBI/NLM Journal Publishing DTD ("Blue2" http://dtd.nlm.nih.gov/publishing/tag-library/2.2/), but can be used with any XSL that generates valid (X)HTML from an XML schema. It was based upon the original XmlGalley plugin in order to re-introduce the withdrawn XSLT-FO transform support.
+This plugin, derived from the built-in xmlGalley plugin for OJS, allows article galleys to be dynamically generated from an XML source file using XSLT. The plugin contains built-in support for a modified version of the NCBI/NLM Journal Publishing DTD ("Blue2" http://dtd.nlm.nih.gov/publishing/tag-library/2.2/), but can be used with any XSL that generates valid (X)HTML from an XML schema. This fork re-introduces the withdrawn XSLT-FO transform support, thereby allowing dynamic PDF creation.
 
 License
 -------
@@ -37,7 +37,7 @@ If you wish to use an XML schema other than the Blue2 DTD (eg. Erudit), you will
 
 PDF Generation
 --------------
-The latest version of the plugin (1.1) introduces the ability to dynamically generate PDF using XSL-FO and an external FO processor (eg. Apache FOP).  While it has been tested, this feature is *EXPERIMENTAL* and may not be 100% reliable; errors encountered during FO processing will be output directly to the browser to aid in troubleshooting.  Feedback and bug-reports are welcomed.  PDF generation is currently available for the built-in NLM Blue2 DTD only.
+This fork of the plugin re-introduces the ability to dynamically generate PDF using XSL-FO and an external FO processor (eg. Apache FOP). Feedback and bug-reports are welcomed.
 
 Any existing FO processor may be used, including (in order of preference):
 - Apache FOP (http://xmlgraphics.apache.org/fop/)
@@ -49,18 +49,18 @@ Like an external XSLT processor, you must know the proper syntax to execute a FO
 - for XEP:  "/usr/sbin/XEP/xep.sh [options] -fo <fo file> -pdf <pdf file>"
 - etc.
 
-Please note that Apache FOP is freely available, while both RenderX XEP and XSL Formatter are commercial software.  The OJS XML Galley Plugin is designed to work best with Apache FOP and its level of support for the XSL-FO standard; this may result in some functionality (eg. fo:float) not being available for generated PDF layout.  Also note that current FO processors are Java-based and require a current (1.4) JDK.
+Please note that Apache FOP is freely available, while both RenderX XEP and XSL Formatter are commercial software. The meXML Galley Plugin is designed to work with Apache FOP and its level of support for the XSL-FO standard; this may result in some functionality (eg. fo:float) not being available for generated PDF layout.  Also note that current FO processors are Java-based and require a current (1.4) JDK.
 
 Installation
 ------------
 To install the plugin:
-- as Journal Manager, go into the "System Plugins" page and enable the XML Galley plugin.
+- as Journal Manager, go into the "System Plugins" page and enable the meXmlGalley plugin.
 
 If either XSL or XSLT built-in PHP functions are available, dynamic XML article galleys will be enabled using the NLM Blue2 DTD XSL.  Otherwise you will have to configure an external XSLT processor via the plugin's "settings" page.
 
 Configuration
 ------------
-Even if built-in PHP functions are available, the plugin can be configured to perform XSLT transformations using an external processor if desired. Please note that this is not recommended for performance reasons.  In addition, the plugin allows a custom XSL stylesheet file to be uploaded and used in lieu of the built-in DTD.
+Even if built-in PHP functions are available, the plugin can be configured to perform XSLT transformations using an external processor if desired. Please note that this is not recommended for performance reasons. In addition, the plugin allows a custom XSL stylesheet file to be uploaded and used in lieu of the built-in DTD.
 
 This plugin makes use of the caching mechanisms built into OJS - It is *HIGHLY RECOMMENDED* that caching be enabled for OJS by the Site Manager when using this plugin.  XSLT is a very CPU-intensive process and you are likely to see poor performance if caching is not used.
 
