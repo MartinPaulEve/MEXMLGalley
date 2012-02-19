@@ -101,7 +101,8 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 						$xslSheet = $xmlGalleyPlugin->getPluginPath() . '/transform/jpub/jpub3-APAcit-xslfo.xsl';
 						$xsltRenderer = "saxon";
 					} else {
-						$xslSheet = $xmlGalleyPlugin->getPluginPath() . '/transform/nlm/nlm-xhtml.xsl';
+						// $xslSheet = $xmlGalleyPlugin->getPluginPath() . '/transform/nlm/nlm-xhtml.xsl';
+						$xslSheet = $xmlGalleyPlugin->getPluginPath() . '/transform/jpub/jpub3-APAcit-html.xsl';
 					}
 					break;
 				case 'custom';

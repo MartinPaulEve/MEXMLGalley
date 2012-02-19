@@ -2649,6 +2649,12 @@
     </a>
   </xsl:template>
 
+<xsl:template match="fn-link">
+    <a href="#{@rid}">
+      <xsl:apply-templates/>
+    </a>
+</xsl:template>
+
 
   
   <!-- ============================================================= -->

@@ -1,0 +1,3 @@
+meXml is distributed and licensed under the GNU GPL v2 a copy of which resides in the COPYING file.
+
+meXml contains the Saxon XSLT and XQuery Processor from Saxonica Limited <http://www.saxonica.com/> which is dual-licensed under the GNU GPL and the Mozilla Public License <http://www.mozilla.org/MPL/>. This dual-licensing applies ONLY to the file saxon9.jar.
