@@ -645,12 +645,13 @@
 
 
   <xsl:template match="self-uri" mode="metadata">
+    <xsl:variable name="theurl" select="."/>
     <xsl:call-template name="metadata-labeled-entry">
       <xsl:with-param name="label">
         <xsl:text>Self URI</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="contents">
-        <a href="{@xlink:href}">
+        <a href="{$theurl}">
           <xsl:choose>
             <xsl:when test="normalize-space()">
               <xsl:apply-templates/>
@@ -1281,35 +1282,29 @@
           ((anonymous | collab | name)*, (degrees)*, 
            (address | aff | author-comment | bio | email |
             ext-link | on-behalf-of | role | uri | xref)*) -->
-        <tr>
-          <td align="right">
+
             <xsl:call-template name="contrib-identify">
               <!-- handles
                    (anonymous | collab | name | degrees | xref) -->
             </xsl:call-template>
-          </td>
-          <td>
+
             <xsl:call-template name="contrib-info">
               <!-- handles
                    (address | aff | author-comment | bio | email |
                     ext-link | on-behalf-of | role | uri) -->
             </xsl:call-template>
-          </td>
-        </tr>
+
       </xsl:for-each>
       <!-- end of contrib -->
       <xsl:variable name="misc-contrib-data"
         select="*[not(self::contrib | self::xref)]"/>
       <xsl:if test="$misc-contrib-data">
-        <tr>
-          <td>&#160;</td>
-          <td>
+
             <div class="metadata-group">
               <xsl:apply-templates mode="metadata"
                 select="$misc-contrib-data"/>
             </div>
-          </td>
-        </tr>
+
       </xsl:if>
   </xsl:template>
 
