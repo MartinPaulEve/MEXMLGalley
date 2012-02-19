@@ -217,6 +217,7 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 				// TODO: this should "smart replace" the file path ($this->getFilePath()) in the XSL-FO
 				// in lieu of requiring XSL parameters, and transparently for FO that are hardcoded 
 				foreach ($images as $image) {
+					error_log("images");
 					$contents = preg_replace(
 						'/src\s*=\s*"([^"]*)' . preg_quote($image->getOriginalFileName()) . '([^"]*)"/i',
 						'src="${1}' . dirname($this->getFilePath()) . DIRECTORY_SEPARATOR . $image->getFileName() . '$2"',
@@ -281,6 +282,43 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 		FileManager::viewFile($pdfFileName, $this->getFileType());
 
 		return true;
+	}
+
+	function getImageFiles()
+	{
+		error_log("Override");
+		if ($this -> isHTMLGalley())
+		{
+			return parent::getImageFiles();
+		} else {
+			// get the associated article
+			$assocArticle = $this->getArticleId();
+
+			// find the XML galley associated with this PDF
+			$articleXMLGalleyDAO =& DAORegistry::getDAO('ArticleXMLGalleyDAO');
+
+			$result =& $articleXMLGalleyDAO->retrieve(
+				'SELECT	galley_id
+				FROM	article_xml_galleys x
+				WHERE	x.article_id = ?
+				ORDER BY galley_id',
+				array($assocArticle)
+			);
+
+			while (!$result->EOF) {
+				$row = $result->GetRowAssoc(false);
+				$xmlGalley = $articleXMLGalleyDAO->_getXMLGalleyFromId($row['galley_id'], $articleId);
+
+				if ($xmlGalley->isHTMLGalley()) {
+					error_log("Found associated XML galley for image transclusion:" . $row['galley_id'] . ".");
+					return $xmlGalley->getImageFiles();
+				}
+
+				$result->moveNext();
+			}
+
+			return null;
+		}
 	}
 
 	/**
