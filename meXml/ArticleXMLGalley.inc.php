@@ -217,9 +217,6 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 				// TODO: this should "smart replace" the file path ($this->getFilePath()) in the XSL-FO
 				// in lieu of requiring XSL parameters, and transparently for FO that are hardcoded 
 
-				// TODO: needs to replace the directory name with associated XML galley
-				// also has to traverse (..) up /files/journals/1/articles/2/
-				// OLD: $directoryname = dirname($this->getFilePath());
 				$directoryname = "../../../../../../" . dirname($this->getAssociatedGalley()->getFilePath());
 				error_log ("Transclude directory name: " . $directoryname);
 
@@ -264,6 +261,9 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 			$fopCommand = str_replace(array('%fo', '%pdf'), 
 					array($tempFoName, $pdfFileName), 
 					$xmlGalleyPlugin->getSetting($journal->getId(), 'externalFOP'));
+
+			// append config file
+			$fopCommand = $fopCommand . " -c " . $xmlGalleyPlugin->getPluginPath() . '/transform/fop.xconf';
 
 			// check for safe mode and escape the shell command
 			if( !ini_get('safe_mode') ) $fopCommand = escapeshellcmd($fopCommand);

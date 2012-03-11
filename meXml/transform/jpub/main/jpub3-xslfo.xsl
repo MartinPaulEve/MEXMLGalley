@@ -158,7 +158,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 <xsl:variable name="titlefont">sans-serif</xsl:variable>
 
 <!-- Font used for normal paragraph text.  -->
-<xsl:variable name="textfont">Helvetica</xsl:variable>
+<xsl:variable name="textfont">Georgia</xsl:variable>
 
 <!-- Font size for for normal paragraph text and the like. -->
 <xsl:variable name="textsize" select="'10pt'"/>
@@ -246,7 +246,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   <xsl:attribute name="margin-left">
     <xsl:value-of select="$mainindent"/>
   </xsl:attribute>
-  <xsl:attribute name="font-size">
+  <xsl:attribute name="font-family">
     <xsl:value-of select="$textfont"/>
   </xsl:attribute>
   <xsl:attribute name="font-size">
@@ -264,7 +264,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   <xsl:attribute name="margin-left">
     <xsl:value-of select="$mainindent"/>
   </xsl:attribute>
-  <xsl:attribute name="font-size">
+  <xsl:attribute name="font-family">
     <xsl:value-of select="$textfont"/>
   </xsl:attribute>
   <xsl:attribute name="font-size">
@@ -435,7 +435,10 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   <xsl:attribute name="text-indent">1pc</xsl:attribute>
   <xsl:attribute name="font-size">11pt</xsl:attribute>
   <xsl:attribute name="line-height">16pt</xsl:attribute>
-  <xsl:attribute name="font-family">Times</xsl:attribute>
+  <xsl:attribute name="font-family">
+   <xsl:attribute name="font-family">
+    <xsl:value-of select="$textfont"/>
+  </xsl:attribute></xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="paragraph-tight" use-attribute-sets="paragraph">

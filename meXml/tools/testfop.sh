@@ -5,7 +5,7 @@
 
 saxon="./saxon9.jar"
 javacmd="java -jar $saxon -o ../transform/debug/new.fo ../transform/debug/meXmlGalleySampleDocument.xml ../transform/jpub/jpub3-APAcit-xslfo.xsl"
-fopcmd="fop ../transform/debug/new.fo ../transform/debug/new.pdf"
+fopcmd="fop -c ../transform/fop.xconf ../transform/debug/new.fo ../transform/debug/new.pdf"
 
 if [ ! -f $saxon ];
 then
