@@ -113,7 +113,7 @@ class meXml extends GenericPlugin {
 		$row =& $args[1];
 
 		// If the galley is an XML file, then convert it from an HTML Galley to an XML Galley
-		if ($galley->getFileType() == "text/xml") {
+		if ($galley->getFileType() == "text/xml" || $galley->getFileType() == "application/xml") {
 			$galley = $this->_returnXMLGalleyFromArticleGalley($galley);
 			return true;
 		}
