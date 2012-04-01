@@ -1048,7 +1048,6 @@
   <xsl:template mode="format"
     match="bold | italic | monospace | overline | roman |
            sans-serif | sc | strike | underline | inline-graphic |
-           label | email | ext-link | uri | sub | sup | 
            styled-content">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
@@ -1064,8 +1063,18 @@
   </xsl:template>
 
   <xsl:template mode="format" match="pub-id[@pub-id-type=('DOI','doi')]">
+	<xsl:param name="href">
+	   <xsl:choose>
+	      <xsl:when test="normalize-space()">
+		<xsl:apply-templates/>
+	      </xsl:when>
+	      <xsl:otherwise>
+		 <xsl:value-of select="@contents"/>
+	      </xsl:otherwise>
+	   </xsl:choose>
+	  </xsl:param>
     <xsl:text>doi:</xsl:text>
-    <xsl:apply-templates mode="format"/>
+	<uri>http://dx.doi.org/<xsl:apply-templates mode="format"/></uri>
   </xsl:template>
 
   <xsl:template mode="format" match="pub-id[@pub-id-type=('PMID','pmid')]">
