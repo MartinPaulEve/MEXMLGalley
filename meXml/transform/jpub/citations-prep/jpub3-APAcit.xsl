@@ -320,7 +320,7 @@
                      or @publication-type='dissertation'">
           <xsl:call-template name="book-citation-content"/>
         </xsl:when>
-        <xsl:when test="@publication-type='book-chapter'">
+        <xsl:when test="@publication-type='bookchapter'">
           <xsl:call-template name="book-chapter-citation-content"/>
         </xsl:when>
         <xsl:when test="@publication-type">
