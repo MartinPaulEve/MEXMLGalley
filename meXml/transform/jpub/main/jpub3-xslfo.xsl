@@ -290,8 +290,8 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 </xsl:attribute-set>
 
 <xsl:attribute-set name="main-title" use-attribute-sets="outset title">
-  <xsl:attribute name="font-size">16pt</xsl:attribute>
-  <xsl:attribute name="line-height">18pt</xsl:attribute>
+  <xsl:attribute name="font-size">14pt</xsl:attribute>
+  <xsl:attribute name="line-height">16pt</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="journal-title" use-attribute-sets="outset title">
@@ -315,13 +315,13 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 </xsl:attribute-set>
 
 <xsl:attribute-set name="section-title" use-attribute-sets="outset title">
-  <xsl:attribute name="font-size">14pt</xsl:attribute>
-  <xsl:attribute name="line-height">16pt</xsl:attribute>
+  <xsl:attribute name="font-size">12pt</xsl:attribute>
+  <xsl:attribute name="line-height">17pt</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="subsection-title" use-attribute-sets="outset title">
   <xsl:attribute name="font-size">12pt</xsl:attribute>
-  <xsl:attribute name="line-height">14pt</xsl:attribute>
+  <xsl:attribute name="line-height">17pt</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="block-title" use-attribute-sets="title">
@@ -2962,7 +2962,6 @@ $allow-float and
     <xsl:apply-templates/>
   </fo:block>
 </xsl:template>
-
 
 <xsl:template match="fig | fig-group">
   <xsl:param name="allow-float" select="true()"/>
