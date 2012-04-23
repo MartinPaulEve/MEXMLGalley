@@ -217,16 +217,17 @@ class ArticleXMLGalley extends ArticleHTMLGalley {
 				// TODO: this should "smart replace" the file path ($this->getFilePath()) in the XSL-FO
 				// in lieu of requiring XSL parameters, and transparently for FO that are hardcoded 
 
-				$directoryname = "../../../../../../" . dirname($this->getAssociatedGalley()->getFilePath());
+				$directoryname = dirname($this->getAssociatedGalley()->getFilePath());
 				error_log ("Transclude directory name: " . $directoryname);
 
 				foreach ($images as $image) {
 					error_log($image->getFileName());
-					error_log ("Image original filename: " . $image->getOriginalFileName());
+					error_log ("Replacing: " . $image->getOriginalFileName() . " with " . $directoryname . DIRECTORY_SEPARATOR . $image->getFileName());
 					$contents = preg_replace(
 						'/src\s*=\s*"([^"]*)' . preg_quote($image->getOriginalFileName()) . '([^"]*)"/i',
 						'src="${1}' . $directoryname . DIRECTORY_SEPARATOR . $image->getFileName() . '$2"',
 						$contents );
+					$contents = str_replace($directoryname . DIRECTORY_SEPARATOR . $directoryname, $directoryname . DIRECTORY_SEPARATOR, $contents);
 				}
 			}
 
