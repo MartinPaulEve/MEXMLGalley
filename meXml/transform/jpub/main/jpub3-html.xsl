@@ -1987,14 +1987,14 @@
 
   <xsl:template match="graphic | inline-graphic">
     <xsl:apply-templates/>
-    <img alt="{@xlink:href}">
+    <a href="{@xlink:href}" rel="lightbox"><img class="inline-graphic" alt="{@xlink:href}">
       <xsl:for-each select="alt-text">
         <xsl:attribute name="alt">
           <xsl:value-of select="normalize-space(.)"/>
         </xsl:attribute>
       </xsl:for-each>
       <xsl:call-template name="assign-src"/>
-    </img>
+    </img></a>
   </xsl:template>
   
   
