@@ -566,8 +566,8 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   <xsl:attribute name="white-space-treatment">preserve</xsl:attribute>
   <xsl:attribute name="white-space-collapse">false</xsl:attribute>
   <xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>
-  <xsl:attribute name="font-family">monospace</xsl:attribute>
-  <xsl:attribute name="font-size">8pt</xsl:attribute>
+  <xsl:attribute name="font-family">Georgia</xsl:attribute>
+  <xsl:attribute name="font-size">11pt</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="speech"/>
@@ -3071,7 +3071,7 @@ $allow-float and
 
 
 <xsl:template match="preformat">
-  <xsl:param name="allow-float" select="true()"/>
+  <xsl:param name="allow-float" select="false()"/>
   <xsl:call-template name="set-float">
     <xsl:with-param name="allow-float"
       select="$allow-float and
@@ -3081,14 +3081,10 @@ $allow-float and
             ancestor::supplementary-material | 
             ancestor::disp-formula | ancestor::table-wrap)"/>
     <xsl:with-param name="contents">
-      <fo:block-container xsl:use-attribute-sets="preformat-box">
         <xsl:apply-templates select="@orientation"/>
-        <fo:wrapper start-indent="0pc">
           <fo:block xsl:use-attribute-sets="preformat">
         <xsl:apply-templates/>
           </fo:block>
-        </fo:wrapper>
-      </fo:block-container>
     </xsl:with-param>
   </xsl:call-template>
 </xsl:template>
