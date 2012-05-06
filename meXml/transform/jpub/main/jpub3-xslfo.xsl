@@ -4709,14 +4709,14 @@ $allow-float and
 
 <xsl:template name="make-external-link">
   <xsl:param name="href">
-   <xsl:choose>
-      <xsl:when test="normalize-space()">
-        <xsl:apply-templates/>
-      </xsl:when>
-      <xsl:otherwise>
-	 <xsl:value-of select="@contents"/>
-      </xsl:otherwise>
-   </xsl:choose>
+	<xsl:choose>
+		<xsl:when test="@xlink:href">
+			<xsl:value-of select="@xlink:href"/>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:apply-templates/>
+		</xsl:otherwise>
+	</xsl:choose>
   </xsl:param>
   <xsl:param name="contents">
     <xsl:choose>
@@ -4727,8 +4727,9 @@ $allow-float and
         <xsl:value-of select="@xlink:href"/>
       </xsl:otherwise>
     </xsl:choose>
-  </xsl:param> 
-	  <fo:basic-link external-destination="{normalize-space($href)}"
+  </xsl:param>
+
+	  <fo:basic-link external-destination="{$href}"
 	    show-destination="new" xsl:use-attribute-sets="link">
 	    <xsl:copy-of select="$contents"/>
 	  </fo:basic-link>
