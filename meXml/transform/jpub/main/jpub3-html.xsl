@@ -2183,6 +2183,13 @@
 		</td>
 	</xsl:template>
 
+  <xsl:template match="pnoindent">
+    <p>
+      <xsl:call-template name="named-anchor"/>
+      <xsl:apply-templates/>
+    </p>
+  </xsl:template>
+
 
   <xsl:template match="disp-quote">
     <div class="blockquote">

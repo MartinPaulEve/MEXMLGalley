@@ -441,6 +441,17 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   </xsl:attribute></xsl:attribute>
 </xsl:attribute-set>
 
+<xsl:attribute-set name="paragraph-justified-noindent">
+  <xsl:attribute name="space-before">7pt</xsl:attribute>
+  <xsl:attribute name="text-align">justify</xsl:attribute>
+  <xsl:attribute name="font-size">11pt</xsl:attribute>
+  <xsl:attribute name="line-height">16pt</xsl:attribute>
+  <xsl:attribute name="font-family">
+   <xsl:attribute name="font-family">
+    <xsl:value-of select="$textfont"/>
+  </xsl:attribute></xsl:attribute>
+</xsl:attribute-set>
+
 <xsl:attribute-set name="paragraph-tight" use-attribute-sets="paragraph">
   <xsl:attribute name="space-before">0pt</xsl:attribute>
 </xsl:attribute-set>
@@ -2621,6 +2632,12 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 <xsl:template match="body/p">
   <fo:block xsl:use-attribute-sets="paragraph-justified">
+    <xsl:apply-templates/>
+  </fo:block>
+</xsl:template>
+
+<xsl:template match="body/pnoindent">
+  <fo:block xsl:use-attribute-sets="paragraph-justified-noindent">
     <xsl:apply-templates/>
   </fo:block>
 </xsl:template>
