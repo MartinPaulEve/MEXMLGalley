@@ -505,6 +505,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 <xsl:attribute-set name="disp-quote" use-attribute-sets="panel">
   <xsl:attribute name="margin-left">2pc</xsl:attribute>
+  <xsl:attribute name="text-align">justify</xsl:attribute>
   <xsl:attribute name="margin-right">2pc</xsl:attribute>
   <xsl:attribute name="font-size">9pt</xsl:attribute>
 </xsl:attribute-set>
