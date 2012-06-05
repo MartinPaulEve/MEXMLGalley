@@ -3,6 +3,7 @@
   xmlns:fo="http://www.w3.org/1999/XSL/Format"
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:mml="http://www.w3.org/1998/Math/MathML"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
   exclude-result-prefixes="xlink mml">
 
 <!-- ============================================================= -->
@@ -659,6 +660,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
       <xsl:call-template name="define-simple-page-masters"/>
       <xsl:call-template name="define-page-sequences"/>
     </fo:layout-master-set>
+      <xsl:call-template name="set-fop-metadata"/>
     <xsl:apply-templates/>
   </fo:root>
 </xsl:template>
@@ -860,6 +862,68 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 </xsl:template>
 
 
+<xsl:template name="set-fop-metadata">
+<fo:declarations>
+  <x:xmpmeta xmlns:x="adobe:ns:meta/">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <rdf:Description rdf:about=""
+          xmlns:dc="http://purl.org/dc/elements/1.1/">
+        <!-- Dublin Core properties go here -->
+	<xsl:for-each select="/article/front/article-meta">
+		<xsl:for-each select="contrib-group">
+			<dc:creator>
+				<xsl:for-each select="contrib">      
+				    	<xsl:apply-templates select="anonymous | collab | name" mode="fop-metadata"/>
+				</xsl:for-each>
+			</dc:creator>
+		</xsl:for-each>
+        	<xsl:apply-templates mode="fop-metadata" select="article-id"/>
+	</xsl:for-each>
+	<xsl:for-each select="/article/front/article-meta/title-group">
+        	<xsl:apply-templates mode="fop-metadata" select="article-title"/>
+        	<xsl:apply-templates mode="fop-metadata" select="abstract"/>
+	</xsl:for-each>
+
+
+      </rdf:Description>
+      <rdf:Description rdf:about=""
+          xmlns:xmp="http://ns.adobe.com/xap/1.0/">
+        <!-- XMP properties go here -->
+        <xmp:CreatorTool>meXml: Martin Eve's XML Generator. https://www.martineve.com/</xmp:CreatorTool>
+      </rdf:Description>
+    </rdf:RDF>
+  </x:xmpmeta>
+</fo:declarations>
+</xsl:template>
+
+
+<xsl:template match="anonymous" mode="fop-metadata">
+    <xsl:text>Anonymous</xsl:text>
+</xsl:template>
+
+
+<xsl:template match="collab" mode="fop-metadata">
+      <xsl:apply-templates mode="fop-metadata"/>
+</xsl:template>
+
+
+
+<xsl:template match="contrib/name" mode="fop-metadata">
+    <!-- (surname, given-names?, prefix?, suffix?) -->
+    <xsl:call-template name="write-name"/>
+</xsl:template>
+
+<xsl:template match="article-title" mode="fop-metadata">
+	<dc:title><xsl:value-of select="."/></dc:title>
+</xsl:template>
+
+<xsl:template match="article-id" mode="fop-metadata">
+	<dc:identifier><xsl:value-of select="."/></dc:identifier>
+</xsl:template>
+
+<xsl:template match="abstract" mode="fop-metadata">
+	<dc:description><xsl:value-of select="."/></dc:description>
+</xsl:template>
 
 <xsl:template name="set-article-cover-page">
 
