@@ -921,6 +921,10 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 	<dc:identifier><xsl:value-of select="."/></dc:identifier>
 </xsl:template>
 
+<xsl:template match="article-id" mode="plain">
+	<xsl:value-of select="."/>
+</xsl:template>
+
 <xsl:template match="abstract" mode="fop-metadata">
 	<dc:description><xsl:value-of select="."/></dc:description>
 </xsl:template>
@@ -2764,9 +2768,15 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 <xsl:template match="license">
   <fo:block xsl:use-attribute-sets="license">
     <xsl:apply-templates/>
+    <xsl:call-template name="append-doi-fop" />
   </fo:block>
 </xsl:template>
 
+<xsl:template name="append-doi-fop">
+	<xsl:for-each select="/article/front/article-meta">
+       		DOI: <xsl:apply-templates mode="plain" select="article-id"/>
+	</xsl:for-each>
+</xsl:template>
 
 <xsl:template match="license-p">
   <fo:block xsl:use-attribute-sets="paragraph">
