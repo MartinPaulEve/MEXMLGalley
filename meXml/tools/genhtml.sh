@@ -20,7 +20,9 @@ infile=$1
 filename=$(basename "$1")
 filename=${filename%.*}
 
-javacmd="java -jar $saxon -o ./$(date +'%-m-%-e-%Y')-$filename.html $infile $scriptdir/../transform/jpub/jpub3-APAcit-html.xsl"
+OUTFILE="./$(date +'%-m-%-e-%Y')-$filename.html"
+
+javacmd="java -jar $saxon -o $OUTFILE.tmp $infile $scriptdir/../transform/jpub/jpub3-APAcit-html.xsl"
 
 if [ ! -f $infile ];
 then
@@ -37,3 +39,9 @@ fi
 echo "INFO: Running saxon transform: $javacmd"
 $javacmd
 
+echo \<\!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" > $OUTFILE
+echo \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"\> >> $OUTFILE
+cat "$OUTFILE.tmp" >> $OUTFILE
+echo \</html\> >> $OUTFILE
+
+rm "$OUTFILE.tmp"
