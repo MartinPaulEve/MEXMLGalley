@@ -27,14 +27,8 @@
 	    <xsl:param name="name"/>
 
 		<xsl:call-template name="nl-1"/>
-	    <script type="text/javascript" language="JavaScript">
-	        <xsl:text disable-output-escaping="yes">// &lt;![CDATA[ 
-			window.name = '</xsl:text>
-			<xsl:value-of select="$name"/>
-			<xsl:text disable-output-escaping="yes">' ;
-			//]]&gt;</xsl:text>
-	    </script>
-
+		<!-- This is where anything at the top of the document can go -->
+		
 	</xsl:template>
 
 	<!-- generate a javascript-scrambled email link as an anti-sam measure -->

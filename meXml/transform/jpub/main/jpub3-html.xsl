@@ -46,12 +46,14 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:mml="http://www.w3.org/1998/Math/MathML"
+  xmlns:xslt="http://xml.apache.org/xslt"
+  xmlns="http://www.w3.org/1999/xhtml"
   exclude-result-prefixes="xlink mml">
 
 
-  <!--<xsl:output method="xml" indent="yes" omit-xml-declaration="yes" encoding="UTF-8"
+  <xsl:output method="xhtml" indent="yes" omit-xml-declaration="no" encoding="UTF-8"
     doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
-    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>-->
+    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
 
 
   <!--<xsl:output doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -110,9 +112,14 @@
   <!--  ROOT TEMPLATE - HANDLES HTML FRAMEWORK                       -->
   <!-- ============================================================= -->
 
-  <!-- modified as this will be included inline -->
+  
   <xsl:template match="/">
+      <html xmlns="http://www.w3.org/1999/xhtml">
+        <xsl:call-template name="make-html-header"></xsl:call-template>
+        <body>
         <xsl:apply-templates/>
+        </body>
+      </html>
   </xsl:template>
 
 
@@ -127,7 +134,7 @@
         <xsl:value-of
           select="/article/front/article-meta/title-group/article-title[1]"/>
       </title>
-      <link rel="stylesheet" type="text/css" href="{$css}"/>
+      <!--<link rel="stylesheet" type="text/css" href="{$css}"/>-->
       <!-- XXX check: any other header stuff? XXX -->
     </head>
   </xsl:template>
@@ -1743,15 +1750,16 @@
   
   <xsl:template match="ref-list" name="ref-list">
     <div class="section ref-list">
-      <xsl:call-template name="named-anchor"/>
+      <!--<xsl:call-template name="named-anchor"/>-->
       <xsl:apply-templates select="." mode="label"/>
       <xsl:apply-templates select="*[not(self::ref | self::ref-list)]"/>
       <xsl:if test="ref">
-        <table class="ref-list">
+        <ul>
           <xsl:apply-templates select="ref"/>
-        </table>
+        </ul>
       </xsl:if>
       <xsl:apply-templates select="ref-list"/>
+      
     </div>
   </xsl:template>
   
@@ -2207,29 +2215,21 @@
 
 
   <xsl:template match="ref">
-      <tr>
-        <td class="ref-label">
-          <p class="ref-label">
-            <xsl:apply-templates select="." mode="label"/>
-            <xsl:text>&#xA0;</xsl:text>
-            <!-- space forces vertical alignment of the paragraph -->
-            <xsl:call-template name="named-anchor"/>
-          </p>
-        </td>
-        <td class="ref-content">
+        <li class="ref-content">
           <xsl:apply-templates/>
-        </td>
-      </tr>
+        </li>
   </xsl:template>
     
   
   <xsl:template match="ref/*" priority="0">
     <!-- should match mixed-citation, element-citation, nlm-citation.
          note and label should be matched below. -->
-    <p class="citation">
-      <xsl:call-template name="named-anchor"/>
+    <!--<p class="citation">-->
+    
+      <!--<xsl:call-template name="named-anchor"/>-->
       <xsl:apply-templates/>
-    </p>
+    
+    <!--</p>-->
   </xsl:template>
  
  
@@ -2585,8 +2585,18 @@
   
   
   <xsl:template match="xref[not(normalize-space())]">
+    <xsl:variable name="fn-number">
+      <xsl:number level="any" count="xref[not(ancestor::front)]"
+        from="article | sub-article | response"/>
+    </xsl:variable>
   	<xsl:choose>
   		<xsl:when test="@ref-type='aff' and count(/article/front/article-meta//aff)=1"/>
+  	  <xsl:when test="@ref-type='fn'">
+  	    <!-- this is an auto-numbered footnote -->
+  	    <a href="#fn{$fn-number}" id="xr{$fn-number}"><sup><xsl:copy-of select="$fn-number" /></sup>
+  	      <xsl:apply-templates/>
+  	    </a>
+  	  </xsl:when>
   		<xsl:otherwise>
 		    <a href="#{@rid}">
 		      <xsl:apply-templates select="key('element-by-id',@rid)"
@@ -2600,9 +2610,16 @@
 
 
   <xsl:template match="xref">
-    <a href="#{@rid}">
-      <xsl:apply-templates/>
-    </a>
+    <xsl:variable name="fn-number">
+      <xsl:number level="any" count="xref[not(ancestor::front)]"
+        from="article | sub-article | response"/>
+    </xsl:variable>
+    <xsl:if test="@ref-type='fn'">
+      <!-- this is an auto-numbered footnote -->
+      <a href="#fn{$fn-number}" id="xr{$fn-number}"><sup><xsl:copy-of select="$fn-number" /></sup>
+        <xsl:apply-templates/>
+      </a>
+    </xsl:if>
   </xsl:template>
 
 <xsl:template match="fn-link">
@@ -2819,6 +2836,8 @@
       <xsl:copy-of select="$contents"/>
     </div>
   </xsl:template>
+  
+
   
 
   <!-- ============================================================= -->
@@ -3098,14 +3117,17 @@
     <xsl:variable name="auto-number-fn"
       select="not(ancestor::article//fn[not(ancestor::front|ancestor::table-wrap)]/label |
                   ancestor::article//fn[not(ancestor::front|ancestor::table-wrap)]/@symbol)"/>
+    <xsl:variable name="fn-number">
+      <xsl:number level="any" count="fn[not(ancestor::front)]"
+        from="article | sub-article | response"/>
+    </xsl:variable>
     <xsl:call-template name="make-label-text">
       <xsl:with-param name="auto" select="$auto-number-fn"/>
       <xsl:with-param name="warning" select="$warning"/>
       <xsl:with-param name="auto-text">
-        <xsl:text>[</xsl:text>
-        <xsl:number level="any" count="fn[not(ancestor::front)]"
-        from="article | sub-article | response"/>
-        <xsl:text>]</xsl:text>
+        <a href="#xr{$fn-number}" id="fn{$fn-number}">
+          <xsl:copy-of select="$fn-number" />
+        </a>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
@@ -3303,7 +3325,17 @@
             <xsl:text>: </xsl:text>
           </span>
         </xsl:if>
-        <xsl:copy-of select="$contents"/>
+        <xsl:choose>
+          <xsl:when test="$label = 'DOI'">
+            <a href="http://dx.doi.org/{$contents}">
+              http://dx.doi.org/<xsl:value-of select="$contents"/>
+            </a>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:copy-of select="$contents"/>
+          </xsl:otherwise>
+        </xsl:choose>
+        
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>

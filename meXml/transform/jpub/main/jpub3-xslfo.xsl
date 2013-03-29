@@ -5,6 +5,8 @@
   xmlns:mml="http://www.w3.org/1998/Math/MathML"
   xmlns:dc="http://purl.org/dc/elements/1.1/"
   exclude-result-prefixes="xlink mml">
+  
+  <xsl:output indent="yes"/>
 
 <!-- ============================================================= -->
 <!--  MODULE:    XSL-FO Preview of Journal Publishing 3.0 XML      -->
@@ -1015,7 +1017,10 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 		<fo:table-cell width="1.5in"><fo:block><xsl:text>URL:</xsl:text></fo:block></fo:table-cell>
 		<fo:table-cell>
 			<fo:block>
-			       <xsl:apply-templates mode="cover-page" select="self-uri"/>
+			  <xsl:variable name="contents" select="self-uri"/>
+			  <fo:basic-link external-destination="url('{$contents}')" xsl:use-attribute-sets="link">
+			    <xsl:value-of select="$contents"/>
+			  </fo:basic-link>
 			</fo:block>
 		</fo:table-cell>
 	</fo:table-row>
@@ -1048,7 +1053,18 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
       </xsl:choose>:</fo:block></fo:table-cell>
 		<fo:table-cell>
 			<fo:block>
-			       <xsl:apply-templates mode="cover-page" select="."/>
+			  <xsl:choose>
+			    <xsl:when test="@pub-id-type='doi'">
+			      <xsl:variable name="contents" select="."/>
+			      <fo:basic-link external-destination="url('http://dx.doi.org/{$contents}')" xsl:use-attribute-sets="link">
+			        http://dx.doi.org/<xsl:value-of select="$contents"/>
+			      </fo:basic-link>
+			    </xsl:when>
+			    <xsl:otherwise>
+			      <xsl:apply-templates mode="cover-page" select="."/>
+			    </xsl:otherwise>
+			  </xsl:choose>
+			       
 			</fo:block>
 		</fo:table-cell>
 	</fo:table-row>
@@ -1058,8 +1074,8 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 
     <xsl:variable name="abstracts"
-          select="title-group/abstract[not(@abstract-type='toc')] |
-          title-group/trans-abstract[not(@abstract-type='toc')]"/>
+          select="/article/front/article-meta/abstract[not(@abstract-type='toc')] |
+          /article/front/article-meta/trans-abstract[not(@abstract-type='toc')]"/>
 
     <xsl:if test="$abstracts">
       <xsl:call-template name="banner-rule"/>
@@ -2704,12 +2720,24 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
     <xsl:apply-templates/>
   </fo:block>
 </xsl:template>
+  
+  <xsl:template match="body/sec/p">
+    <fo:block xsl:use-attribute-sets="paragraph-justified">
+      <xsl:apply-templates/>
+    </fo:block>
+  </xsl:template>
 
-<xsl:template match="body/pnoindent">
+<xsl:template match="body/p[@content-type='continuedparagraph']">
   <fo:block xsl:use-attribute-sets="paragraph-justified-noindent">
     <xsl:apply-templates/>
   </fo:block>
 </xsl:template>
+  
+  <xsl:template match="body/sec/p[@content-type='continuedparagraph']">
+    <fo:block xsl:use-attribute-sets="paragraph-justified-noindent">
+      <xsl:apply-templates/>
+    </fo:block>
+  </xsl:template>
 
 
 <xsl:template match="def[not(preceding-sibling::def)]/p[1]">
@@ -2774,7 +2802,11 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 <xsl:template name="append-doi-fop">
 	<xsl:for-each select="/article/front/article-meta">
-       		DOI: <xsl:apply-templates mode="plain" select="article-id"/>
+	  <xsl:variable name="contents" select="article-id"/>
+	  DOI: <fo:basic-link external-destination="url('http://dx.doi.org/{$contents}')" xsl:use-attribute-sets="link">
+	    http://dx.doi.org/<xsl:value-of select="$contents"/>
+	  </fo:basic-link>
+	  
 	</xsl:for-each>
 </xsl:template>
 
@@ -2902,7 +2934,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
     <!-- graphics and media are only allowed to float
          when they appear outside the named elements -->
     <xsl:with-param name="allow-float"
-      select="false"/>
+      select="false()"/>
     <xsl:with-param name="contents">
       <fo:block-container xsl:use-attribute-sets="media-object">
         <xsl:apply-templates select="@orientation"/>
@@ -3705,7 +3737,7 @@ $allow-float and
           <xsl:call-template name="assign-id"/>
           <fo:list-item-label end-indent="label-end()">
             <fo:block xsl:use-attribute-sets="list-item-label">
-              <xsl:apply-templates select="." mode="label"/>
+              <!--<xsl:apply-templates select="." mode="label"/>-->
             </fo:block>
           </fo:list-item-label>
           <fo:list-item-body start-indent="body-start()">
@@ -4000,14 +4032,25 @@ $allow-float and
 <xsl:template match="xref">
   <xsl:variable name="target" select="key('element-by-id',@rid)"/>
   <xsl:variable name="xrefs" select="key('xref-by-rid',@rid)"/>
+  <xsl:variable name="fn-number">
+    <xsl:number level="any" count="xref[not(ancestor::front)]"
+      from="article | sub-article | response"/>
+  </xsl:variable>
   <xsl:choose>
     <!-- if the xref points to an fn, aff or corresp we
          call out to 'fn-xref' -->
-    <xsl:when test="$target[self::fn | self::aff | self::corresp]">
+    <xsl:when test="$target[self::aff | self::corresp]">
       <xsl:call-template name="fn-xref">
         <xsl:with-param name="target" select="$target"/>
         <xsl:with-param name="xrefs" select="$xrefs"/>
       </xsl:call-template>
+    </xsl:when>
+    <!-- this handles auto footnotes -->
+    <xsl:when test="@ref-type='fn'">
+      <!-- this is an auto-numbered footnote -->
+      <fo:basic-link internal-destination="fn{$fn-number}" id="xr{$fn-number}">
+        <fo:inline xsl:use-attribute-sets="link footnote-ref"><xsl:copy-of select="$fn-number"/></fo:inline>
+      </fo:basic-link>
     </xsl:when>
     <!-- otherwise, we place either the xref content, or an
          acquired label (if we have no content) here -->
@@ -4484,7 +4527,8 @@ $allow-float and
     select="not($in-scope-notes/label |
                 $in-scope-notes/@symbol)"/>
   <xsl:call-template name="make-label-text">
-    <xsl:with-param name="auto" select="$auto-number-fn"/>
+    <!--<xsl:with-param name="auto" select="$auto-number-fn"/>-->
+    <xsl:with-param name="auto" select="true()"/>
     <xsl:with-param name="warning" select="$warning"/>
     <xsl:with-param name="auto-text">
       <xsl:text>[</xsl:text>
@@ -4522,8 +4566,14 @@ $allow-float and
     select="key('xref-by-rid',@id)[not(normalize-space())]"/>
   <!-- auto-number this fn if it has any empty xrefs, unless we're
        in a table-wrap-foot -->
-  <xsl:variable name="auto-number-fn" select="boolean($empty-xrefs)
-    and not(label|@symbol)"/>
+  <!--<xsl:variable name="auto-number-fn" select="boolean($empty-xrefs)
+    and not(label|@symbol)"/>-->
+  <xsl:variable name="auto-number-fn" select="true()"/>
+  
+  <xsl:variable name="fn-number">
+      <xsl:number level="any" count="fn[not(ancestor::front)]"
+      from="article | sub-article | response"/>
+  </xsl:variable>
 
   <xsl:variable name="number-format">
     <xsl:choose>
@@ -4537,9 +4587,9 @@ $allow-float and
     <xsl:with-param name="auto" select="$auto-number-fn"/>
     <xsl:with-param name="warning" select="$warning"/>
     <xsl:with-param name="auto-text">
-      <!-- count only footnotes that have xrefs -->
-      <xsl:number level="single" format="{$number-format}"
-        count="fn[key('xref-by-rid',@id)][not(normalize-space())]"/>
+      <fo:basic-link internal-destination="xr{$fn-number}" id="fn{$fn-number}" xsl:use-attribute-sets="link">
+        <xsl:copy-of select="$fn-number"/>
+      </fo:basic-link>
     </xsl:with-param>
   </xsl:call-template>
 </xsl:template>
@@ -4920,13 +4970,23 @@ $allow-float and
   </xsl:param>
   <xsl:call-template name="metadata-entry-cell">
     <xsl:with-param name="contents">
-      <xsl:if test="normalize-space($label)">
-        <fo:inline xsl:use-attribute-sets="metadata-label">
-          <xsl:copy-of select="$label"/>
-          <xsl:text>: </xsl:text>
-        </fo:inline>
-      </xsl:if>
-      <xsl:copy-of select="$contents"/>
+        <xsl:if test="normalize-space($label)">
+          <fo:inline xsl:use-attribute-sets="metadata-label">
+            <xsl:copy-of select="$label"/>
+            <xsl:text>: </xsl:text>
+          </fo:inline>
+        </xsl:if>
+      
+      <xsl:choose>
+        <xsl:when test="$label = 'DOI'">
+          <fo:basic-link external-destination="url('http://dx.doi.org/{$contents}')" xsl:use-attribute-sets="link">
+            <xsl:copy-of select="$contents"/>
+          </fo:basic-link>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:copy-of select="$contents"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:with-param>
   </xsl:call-template>
 </xsl:template>

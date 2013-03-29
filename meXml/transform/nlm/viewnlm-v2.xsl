@@ -363,7 +363,7 @@
 
 <xsl:output method="html"
             indent="yes"
-            encoding="UTF-8"/>
+            />
 <!--
 doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"            doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
 -->
@@ -3181,7 +3181,7 @@ doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"            doctype-system="htt
 <xsl:template match="xref">
   <span class="xref">
     <xsl:call-template name="make-id"/>
-    <a target="xrefwindow" href="#{@rid}">
+    <a href="#{@rid}">
       <xsl:choose>
         <!-- if xref not empty -->
         <xsl:when test="child::node()">
