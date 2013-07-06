@@ -817,6 +817,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   <xsl:param name="center-cell">
     <fo:block/>
   </xsl:param>
+
     <fo:table border-style="none" width="100%">
       <fo:table-body>
         <fo:table-row>
@@ -3088,19 +3089,7 @@ $allow-float and
 </xsl:template>
 
 <xsl:template match="fig | fig-group">
-  <xsl:param name="allow-float" select="true()"/>
-  <xsl:call-template name="set-float">
-    <xsl:with-param name="allow-float" select="$allow-float"/>
-    <xsl:with-param name="contents">
-      <fo:block-container xsl:use-attribute-sets="fig-box">
-        <xsl:apply-templates select="@orientation"/>
-        <fo:wrapper start-indent="0pc">
-          <xsl:apply-templates select="." mode="label"/>
           <xsl:apply-templates/>
-        </fo:wrapper>
-      </fo:block-container>
-    </xsl:with-param>
-  </xsl:call-template>
 </xsl:template>
 
 
