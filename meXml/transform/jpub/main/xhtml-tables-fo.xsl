@@ -413,6 +413,7 @@ PERFORMANCE OF THIS SOFTWARE.
     <xsl:attribute name="last-line-end-indent">0pt</xsl:attribute>
     <xsl:attribute name="text-align">start</xsl:attribute>
     <xsl:attribute name="text-align-last">relative</xsl:attribute>
+    <xsl:attribute name="keep-together">auto</xsl:attribute>
   </xsl:attribute-set>
 
   <xsl:attribute-set name="table-and-caption" >
@@ -424,9 +425,10 @@ PERFORMANCE OF THIS SOFTWARE.
   </xsl:attribute-set>
 
   <xsl:attribute-set name="table">
-    <xsl:attribute name="border-collapse">separate</xsl:attribute>
-    <xsl:attribute name="border-spacing">2px</xsl:attribute>
-    <xsl:attribute name="border">1px</xsl:attribute>
+    <xsl:attribute name="border-collapse">collapse</xsl:attribute>
+    <xsl:attribute name="border-spacing">0px</xsl:attribute>
+    <xsl:attribute name="border">0px</xsl:attribute>
+    <xsl:attribute name="keep-together">always</xsl:attribute>
     <!--
     <xsl:attribute name="border-style">outset</xsl:attribute>
     -->
@@ -445,23 +447,23 @@ PERFORMANCE OF THIS SOFTWARE.
   </xsl:attribute-set>
 
   <xsl:attribute-set name="tr">
+    <xsl:attribute name="keep-together">auto</xsl:attribute>
   </xsl:attribute-set>
 
   <xsl:attribute-set name="th">
     <xsl:attribute name="font-weight">bolder</xsl:attribute>
-    <xsl:attribute name="border">1px</xsl:attribute>
     <!--
     <xsl:attribute name="border-style">inset</xsl:attribute>
     -->
     <xsl:attribute name="padding">1px</xsl:attribute>
+    <xsl:attribute name="keep-together">auto</xsl:attribute>
   </xsl:attribute-set>
 
   <xsl:attribute-set name="td">
     <xsl:attribute name="border">1px</xsl:attribute>
-    <!--
     <xsl:attribute name="border-style">inset</xsl:attribute>
-    -->
-    <xsl:attribute name="padding">1px</xsl:attribute>
+    <xsl:attribute name="padding">0px</xsl:attribute>
+    <xsl:attribute name="keep-together">auto</xsl:attribute>
   </xsl:attribute-set>
 
   <!--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

@@ -161,7 +161,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 <xsl:variable name="titlefont">sans-serif</xsl:variable>
 
 <!-- Font used for normal paragraph text.  -->
-<xsl:variable name="textfont">Georgia</xsl:variable>
+<xsl:variable name="textfont">DejaVu Sans</xsl:variable>
 
 <!-- Font size for for normal paragraph text and the like. -->
 <xsl:variable name="textsize" select="'10pt'"/>
