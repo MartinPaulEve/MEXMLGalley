@@ -3119,26 +3119,18 @@ $allow-float and
 
 
 <xsl:template match="table-wrap | table-wrap-group">
-  <xsl:param name="allow-float" select="true()"/>
-  <xsl:call-template name="set-float">
-    <xsl:with-param name="allow-float" select="$allow-float"/>
-    <xsl:with-param name="contents">
+  
       <fo:block-container xsl:use-attribute-sets="table-box">
           <xsl:if test=".//table[@width='100%']">
             <xsl:attribute name="start-indent">0pc</xsl:attribute>
           </xsl:if>
 
         <xsl:apply-templates select="@orientation"/>
-        <fo:wrapper start-indent="0pc">
-          <xsl:call-template name="assign-id"/>
-          <xsl:apply-templates select="." mode="label"/>
+        
           <xsl:apply-templates/>
           <xsl:apply-templates mode="footnote"
             select="self::table-wrap//fn[not(ancestor::table-wrap-foot)]"/>
-        </fo:wrapper>
       </fo:block-container>
-    </xsl:with-param>
-  </xsl:call-template>
 </xsl:template>
 
 

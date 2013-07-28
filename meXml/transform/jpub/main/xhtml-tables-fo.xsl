@@ -85,12 +85,10 @@ PERFORMANCE OF THIS SOFTWARE.
   =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-->
 
   <xsl:template match="table">
-    <fo:table-and-caption xsl:use-attribute-sets="table-and-caption">
-      <xsl:call-template name="make-table-caption"/>
+    
       <fo:table xsl:use-attribute-sets="table">
         <xsl:call-template name="process-table"/>
       </fo:table>
-    </fo:table-and-caption>
   </xsl:template>
 
   <xsl:template match="thead">
