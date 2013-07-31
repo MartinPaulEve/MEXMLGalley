@@ -429,6 +429,8 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 
 <xsl:attribute-set name="paragraph">
   <xsl:attribute name="space-before">4pt</xsl:attribute>
+  <xsl:attribute name="font-size">11pt</xsl:attribute>
+  <xsl:attribute name="line-height">16pt</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="paragraph-justified">
