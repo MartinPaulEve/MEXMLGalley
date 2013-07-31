@@ -760,6 +760,10 @@
       <xsl:with-param name="publisher" select="$publisher"/>
     </xsl:call-template>
     
+    <xsl:choose>
+      <xsl:when test="boolean(uri)">, <xsl:apply-templates select="uri"/></xsl:when>
+    </xsl:choose>
+    
     <!-- do the page range -->
     
     <xsl:choose>
@@ -767,13 +771,12 @@
       <xsl:when test="boolean($book-info/self::fpage) and boolean($book-info/self::lpage) =  false">, p. <xsl:value-of select="$book-info/self::fpage" /></xsl:when>
     </xsl:choose>
     
-    
     <!-- if there's anything left we drop it in -->
     <xsl:call-template name="comma-sequence">
       <xsl:with-param name="phrases" as="node()*">
         <xsl:apply-templates mode="book-chapter-item"
           select="* except ($all-names | $date |
-          $titles | $book-info | $publisher)"/>
+          $titles | $book-info | $publisher | uri)"/>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
