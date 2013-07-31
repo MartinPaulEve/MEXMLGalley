@@ -684,7 +684,10 @@
         select="@publication-type='dissertation'"/>
     </xsl:call-template>
     
-    
+    <xsl:choose>
+      <xsl:when test="boolean(uri)">, <xsl:apply-templates select="uri"/></xsl:when>
+    </xsl:choose>
+        
     
     <!-- if there's anything left we drop it in -->
     <xsl:call-template name="comma-sequence">
