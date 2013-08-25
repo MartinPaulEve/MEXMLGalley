@@ -8,6 +8,8 @@
   
   <xsl:output indent="yes"/>
 
+  <xsl:param name="logo">/home/martin/Documents/Programming/meXml/transform/resources/logo.png</xsl:param>
+
 <!-- 
 Modifications copyright Martin Paul Eve (https://www.martineve.com) 2013
                                                                    -->
@@ -380,18 +382,21 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 <xsl:attribute-set name="coverpage-abstract">
   <xsl:attribute name="font-size">10pt</xsl:attribute>
   <xsl:attribute name="text-align">justify</xsl:attribute>
+  <xsl:attribute name="space-before">6pt</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="coverpage-title"
   use-attribute-sets="title coverpage-block">
   <xsl:attribute name="font-size">12pt</xsl:attribute>
   <xsl:attribute name="line-height">17pt</xsl:attribute>
+  <xsl:attribute name="space-before">6pt</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="coverpage-subtitle"
   use-attribute-sets="title coverpage-block">
   <xsl:attribute name="font-size">12pt</xsl:attribute>
   <xsl:attribute name="line-height">16pt</xsl:attribute>
+  <xsl:attribute name="space-before">6pt</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="firstpage-title" use-attribute-sets="title">
@@ -943,9 +948,16 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
   <!-- the journal title on a blue bar background -->
   <fo:block-container>
   <xsl:for-each select="/article/front/journal-meta">
-		<fo:block-container background-color="#069" width="100%" display-align="center" height="50pt">
-			<fo:block space-after="12pt">
-				<xsl:apply-templates mode="cover-page" select="journal-id"/>
+		<fo:block-container display-align="center" width="100%">
+		  <fo:block background-color="#000000" width="100%" text-align="left" font-size="0"
+		    line-height="0" margin-top="100px">
+			  <xsl:element name="fo:external-graphic">
+			    <xsl:attribute name="src"><xsl:value-of select="$logo"></xsl:value-of></xsl:attribute>
+			    <xsl:attribute name="content-height">70%</xsl:attribute>
+			    <xsl:attribute name="content-width">70%</xsl:attribute>
+			    <xsl:attribute name="scaling">uniform</xsl:attribute>
+			    <xsl:attribute name="margin-top">50px</xsl:attribute>
+			  </xsl:element>
 			</fo:block>
 		</fo:block-container>
 		<fo:block space-after="12.pt">

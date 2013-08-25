@@ -46,10 +46,11 @@
   
   <xsl:variable name="document" select="/" saxon:assignable="yes"/>
   
+  
   <xsl:param name="runtime-params">
     <base-dir>
       <xsl:value-of
-        select="replace(base-uri(/), '/[^/]+$','')"/>     
+        select="replace(base-uri(/), '/[^/]+$','')"/>
     </base-dir>
   </xsl:param>
 
