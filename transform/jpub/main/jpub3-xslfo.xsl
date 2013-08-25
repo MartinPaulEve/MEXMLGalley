@@ -8,10 +8,14 @@
   
   <xsl:output indent="yes"/>
 
+<!-- 
+Modifications copyright Martin Paul Eve (https://www.martineve.com) 2013
+                                                                   -->
+
 <!-- ============================================================= -->
 <!--  MODULE:    XSL-FO Preview of Journal Publishing 3.0 XML      -->
 <!--  VERSION:   1.0                                               -->
-<!--  DATE:      January-February 2009                             -->
+<!--  DATE:      August 2013                                       -->
 <!--                                                               -->
 <!-- ============================================================= -->
 

@@ -61,7 +61,11 @@ the location of this file.
       </filterList>
 
       <fonts>
-	<directory>/usr/share/fonts/truetype/msttcorefonts/</directory>
+	       <!--<directory>/usr/share/fonts/truetype/msttcorefonts/</directory>-->
+         <directory>/home/martin/.fonts/</directory>
+        <directory recursive="true">/usr/share/fonts/</directory>
+        
+
         <!-- embedded fonts -->
         <!--
         This information must exactly match the font specified
@@ -95,6 +99,7 @@ the location of this file.
           <font-triplet name="ArialMT" style="normal" weight="bold"/>
         </font>
         -->
+        
       </fonts>
 
       <!-- This option lets you specify additional options on an XML handler -->

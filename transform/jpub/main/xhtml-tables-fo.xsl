@@ -39,6 +39,8 @@
 
 <!--
 
+Modifications copyright Martin Paul Eve (https://www.martineve.com) 2013
+
 Copyright Antenna House, Inc. (http://www.antennahouse.com) 2001, 2002.
 
 Since this stylesheet is originally developed by Antenna House to be

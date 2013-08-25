@@ -30,7 +30,7 @@ then
     exit
 fi
 
-if [ ! -f $scriptdir/../transform/jpub/jpub3-APAcit-html.xsl ];
+if [ ! -f $scriptdir/../transform/jpub/jpub3-APAcit-html_no_header.xsl ];
 then
     echo "ERROR: Unable to locate $scriptdir/../transform/jpub/jpub3-APAcit-html_no_header.xsl."
     exit
@@ -39,10 +39,10 @@ fi
 echo "INFO: Running saxon transform: $javacmd"
 $javacmd
 
-echo \<?xml version=\"1.0\" encoding=\"UTF-8\"?\>\<\!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" > $OUTFILE
-echo \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"\> >> $OUTFILE
+#echo \<?xml version=\"1.0\" encoding=\"UTF-8\"?\>\<\!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" > $OUTFILE
+#echo \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"\> >> $OUTFILE
 #echo \<html xmlns=\"http://www.w3.org/1999/xhtml\"\> >> $OUTFILE
-cat "$OUTFILE.tmp" >> $OUTFILE
+cat "$OUTFILE.tmp" > $OUTFILE
 #echo \</html\> >> $OUTFILE
 
 rm "$OUTFILE.tmp"
