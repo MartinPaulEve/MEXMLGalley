@@ -2140,7 +2140,11 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
        The context node is /article/front/article-meta -->
   <xsl:call-template name="make-footnote">
     <xsl:with-param name="contents">
-      <xsl:apply-templates select="permissions"/>
+      <xsl:element name="fo:block">
+        <xsl:attribute name="line-height">12pt</xsl:attribute>
+        <xsl:attribute name="margin-top">10px</xsl:attribute>
+          <xsl:apply-templates select="permissions"/>
+      </xsl:element>
     </xsl:with-param>
   </xsl:call-template>   
 </xsl:template>
