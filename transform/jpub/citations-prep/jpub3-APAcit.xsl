@@ -873,10 +873,13 @@
   <xsl:template match="name" mode="author">
     <xsl:document>
       <xsl:apply-templates select="surname" mode="format"/>
-      <xsl:text>, </xsl:text>
-      <xsl:apply-templates select="given-names" mode="format"/>
-      <xsl:for-each select="suffix">
+      <xsl:if test="given-names">
+        <xsl:message>Author: "<xsl:value-of select="given-names"/>"</xsl:message>
         <xsl:text>, </xsl:text>
+        <xsl:apply-templates select="given-names" mode="format"/>
+      </xsl:if>
+        <xsl:for-each select="suffix">
+          <xsl:text>, </xsl:text>
         <xsl:apply-templates select="." mode="format"/>
       </xsl:for-each>
       <xsl:call-template name="author-type"/>
