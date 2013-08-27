@@ -22,7 +22,7 @@ filename=${filename%.*}
 
 # construct commands
 javacmd="java -jar $saxon -o $scriptdir/../transform/debug/new.fo $infile $scriptdir/../transform/jpub/jpub3-APAcit-xslfo.xsl logo=$scriptdir/../transform/resources/logo.jpg"
-fopcmd="fop -c $scriptdir/../transform/fop.xconf $scriptdir/../transform/debug/new.fo ./$(date +'%-m-%-e-%Y')-$filename.pdf"
+fopcmd="fop -q -c $scriptdir/../transform/fop.xconf $scriptdir/../transform/debug/new.fo ./$(date +'%-m-%-e-%Y')-$filename.pdf"
 
 
 if [ ! -f $infile ];
