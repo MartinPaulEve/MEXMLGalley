@@ -874,7 +874,6 @@
     <xsl:document>
       <xsl:apply-templates select="surname" mode="format"/>
       <xsl:if test="given-names">
-        <xsl:message>Author: "<xsl:value-of select="given-names"/>"</xsl:message>
         <xsl:text>, </xsl:text>
         <xsl:apply-templates select="given-names" mode="format"/>
       </xsl:if>
