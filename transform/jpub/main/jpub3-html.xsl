@@ -2620,6 +2620,11 @@
         <xsl:apply-templates/>
       </a>
     </xsl:if>
+    <xsl:if test="@ref-type='bibr">
+      <xsl:variable name="selfid" select="@id"/>
+      <xsl:variable name="rid" select="@rid"/>
+      <a href="#{$rid}" id="link{$selfid}"><xsl:apply-templates/></a>
+    </xsl:if>
   </xsl:template>
 
 <xsl:template match="fn-link">

@@ -4083,6 +4083,14 @@ $allow-float and
         <fo:inline xsl:use-attribute-sets="link footnote-ref"><xsl:copy-of select="$fn-number"/></fo:inline>
       </fo:basic-link>
     </xsl:when>
+    <xsl:when test="@ref-type='bibr'">
+      <xsl:variable name="selfid" select="@id"/>
+      <xsl:variable name="rid" select="@rid"/>
+      <!-- this is an auto-numbered footnote -->
+      <fo:basic-link internal-destination="{$rid}" id="link{$selfid}">
+        <fo:inline xsl:use-attribute-sets="link"><xsl:apply-templates/></fo:inline>
+      </fo:basic-link>
+    </xsl:when>
     <!-- otherwise, we place either the xref content, or an
          acquired label (if we have no content) here -->
     <xsl:otherwise>
