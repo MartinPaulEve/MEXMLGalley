@@ -368,6 +368,7 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 </xsl:attribute-set>
 
 
+
 <xsl:attribute-set name="coverpage-block">
   <xsl:attribute name="space-before">6pt</xsl:attribute>
 </xsl:attribute-set>
@@ -465,6 +466,18 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
     <xsl:value-of select="$textfont"/>
   </xsl:attribute></xsl:attribute>
 </xsl:attribute-set>
+  
+  
+  <xsl:attribute-set name="paragraph-right">
+    <xsl:attribute name="space-before">7pt</xsl:attribute>
+    <xsl:attribute name="text-align">right</xsl:attribute>
+    <xsl:attribute name="font-size">11pt</xsl:attribute>
+    <xsl:attribute name="line-height">16pt</xsl:attribute>
+    <xsl:attribute name="font-family">
+      <xsl:attribute name="font-family">
+        <xsl:value-of select="$textfont"/>
+      </xsl:attribute></xsl:attribute>
+  </xsl:attribute-set>
 
 <xsl:attribute-set name="paragraph-tight" use-attribute-sets="paragraph">
   <xsl:attribute name="space-before">0pt</xsl:attribute>
@@ -2750,6 +2763,18 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
     </fo:block>
   </xsl:template>
 
+  <xsl:template match="body/p[@content-type='alignright']">
+    <fo:block xsl:use-attribute-sets="paragraph-right">
+      <xsl:apply-templates/>
+    </fo:block>
+  </xsl:template>
+
+  <xsl:template match="body/sec/p[@content-type='alignright']">
+    <fo:block xsl:use-attribute-sets="paragraph-right">
+      <xsl:apply-templates/>
+    </fo:block>
+  </xsl:template>
+
 <xsl:template match="body/p[@content-type='continuedparagraph']">
   <fo:block xsl:use-attribute-sets="paragraph-justified-noindent">
     <xsl:apply-templates/>
@@ -2834,7 +2859,10 @@ Reason/Occasion                            (who) vx.x (yyyy-mm-dd)
 </xsl:template>
 
 <xsl:template match="license-p">
-  <fo:block xsl:use-attribute-sets="paragraph">
+  <fo:block>
+        <xsl:attribute name="line-height">12pt</xsl:attribute>
+        <xsl:attribute name="margin-top">10px</xsl:attribute>
+        <xsl:attribute name="text-align">justify</xsl:attribute>
     <xsl:if test="not(preceding-sibling::license-p)">
       <fo:inline xsl:use-attribute-sets="generated">
         <xsl:text>License</xsl:text>
@@ -4036,7 +4064,7 @@ $allow-float and
   <xsl:variable name="target" select="key('element-by-id',@rid)"/>
   <xsl:variable name="xrefs" select="key('xref-by-rid',@rid)"/>
   <xsl:variable name="fn-number">
-    <xsl:number level="any" count="xref[not(ancestor::front)]"
+    <xsl:number level="any" count="xref[not(ancestor::front) and @ref-type='fn']"
       from="article | sub-article | response"/>
   </xsl:variable>
   <xsl:choose>

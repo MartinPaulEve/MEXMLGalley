@@ -2611,7 +2611,7 @@
 
   <xsl:template match="xref">
     <xsl:variable name="fn-number">
-      <xsl:number level="any" count="xref[not(ancestor::front)]"
+      <xsl:number level="any" count="xref[not(ancestor::front) and ref-type='fn']"
         from="article | sub-article | response"/>
     </xsl:variable>
     <xsl:if test="@ref-type='fn'">
