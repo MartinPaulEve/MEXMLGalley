@@ -2215,6 +2215,10 @@
 
 
   <xsl:template match="ref">
+    <xsl:variable name="anchorid" select="@id"/>
+    <xsl:element name="a">
+      <xsl:attribute name="id"><xsl:value-of select="$anchorid"></xsl:value-of></xsl:attribute>
+    </xsl:element>
         <li class="ref-content">
           <xsl:apply-templates/>
         </li>
@@ -2586,7 +2590,7 @@
   
   <xsl:template match="xref[not(normalize-space())]">
     <xsl:variable name="fn-number">
-      <xsl:number level="any" count="xref[not(ancestor::front)]"
+      <xsl:number level="any" count="xref[not(ancestor::front) and @ref-type='fn']"
         from="article | sub-article | response"/>
     </xsl:variable>
   	<xsl:choose>
@@ -2610,11 +2614,11 @@
 
 
   <xsl:template match="xref">
-    <xsl:variable name="fn-number">
-      <xsl:number level="any" count="xref[not(ancestor::front) and ref-type='fn']"
-        from="article | sub-article | response"/>
-    </xsl:variable>
     <xsl:if test="@ref-type='fn'">
+      <xsl:variable name="fn-number">
+        <xsl:number level="any" count="xref[@ref-type='fn' and not(ancestor::front)]"
+          from="article | sub-article | response"/>
+      </xsl:variable>
       <!-- this is an auto-numbered footnote -->
       <a href="#fn{$fn-number}" id="xr{$fn-number}"><sup><xsl:copy-of select="$fn-number" /></sup>
         <xsl:apply-templates/>
