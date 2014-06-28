@@ -704,7 +704,7 @@
   <!-- ============================================================= -->
   
   <xsl:template name="book-chapter-citation-content"
-    match="element-citation[@publication-type='book-chapter']">
+    match="element-citation[@publication-type='bookchapter' or @publication-type='book-chapter']">
     <xsl:variable name="all-names"
       select="(person-group|name|collab|anonymous|etal|string-name) /
       (. | nlm:fetch-comment(.))"/>
@@ -728,7 +728,7 @@
       select="$titles[1][not($placed-names)]"/>
     <xsl:variable name="book-info"
       select="(source | edition |
-      edition/following-sibling::*[1]/self::sup |
+      edition/following-sibling::*[1]/self::sup | edition |
       volume | fpage | lpage | page-range) /
       (. | nlm:fetch-comment(.))"/>
     <xsl:variable name="publisher"
@@ -1121,6 +1121,8 @@
         <xsl:call-template name="format-book-title">
           <xsl:with-param name="title"
             select="$book-info/(self::source|self::trans-source)"/>
+          <xsl:with-param name="title-info"
+            select="$book-info/(self::edition)"/>
         </xsl:call-template>
       </xsl:with-param>
     </xsl:call-template>
