@@ -304,8 +304,7 @@
   <!-- If it fails to match the foregoing template, mixed-citation
     is treated like element-citation -->
   <xsl:template
-    match="element-citation |
-    mixed-citation">
+    match="element-citation | mixed-citation">
     <!-- forgive the xsl:choose; exploding this into eight templates 
       (or more) would be too much of a good thing, and this is 
       easy to maintain -->
@@ -321,6 +320,9 @@
           <xsl:call-template name="book-citation-content"/>
         </xsl:when>
         <xsl:when test="@publication-type='bookchapter'">
+          <xsl:call-template name="book-chapter-citation-content"/>
+        </xsl:when>
+        <xsl:when test="@publication-type='book-chapter'">
           <xsl:call-template name="book-chapter-citation-content"/>
         </xsl:when>
         <xsl:when test="@publication-type='articlereprint'">
@@ -703,8 +705,7 @@
   <!-- For publication type 'book-chapter'                           -->
   <!-- ============================================================= -->
   
-  <xsl:template name="book-chapter-citation-content"
-    match="element-citation[@publication-type='bookchapter' or @publication-type='book-chapter']">
+  <xsl:template name="book-chapter-citation-content">
     <xsl:variable name="all-names"
       select="(person-group|name|collab|anonymous|etal|string-name) /
       (. | nlm:fetch-comment(.))"/>
@@ -733,6 +734,7 @@
       (. | nlm:fetch-comment(.))"/>
     <xsl:variable name="publisher"
       select="(publisher-loc | publisher-name | date/year | year)"/>
+    
     
     <xsl:call-template name="format-names">
       <xsl:with-param name="names"
