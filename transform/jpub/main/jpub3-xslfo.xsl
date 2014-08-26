@@ -4229,9 +4229,19 @@ $allow-float and
   <xsl:param name="contents">
     <xsl:apply-templates/>
   </xsl:param>
-  <fo:inline font-style="italic">
-    <xsl:copy-of select="$contents"/>
-  </fo:inline>
+  
+  <xsl:choose>
+    <xsl:when test="count(ancestor::italic) mod 2 = 1">
+      <fo:inline font-style="normal">
+        <xsl:copy-of select="$contents"/>
+      </fo:inline>
+    </xsl:when>
+    <xsl:otherwise>
+      <fo:inline font-style="italic">
+        <xsl:copy-of select="$contents"/>
+      </fo:inline>    
+    </xsl:otherwise>
+  </xsl:choose>  
 </xsl:template>
 
 
